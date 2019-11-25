@@ -1,0 +1,753 @@
+@charset "UTF-8";
+
+/* this is to reset almost everything under the popup to a sane value */
+
+#rikaichamp-window, #rikaichamp-window * {
+  max-width: 600px;
+  background: transparent;
+  border: none !important;
+  border-spacing: 0px;
+  margin: 0px;
+  padding: 0px;
+  letter-spacing: normal;
+  text-align: left;
+  text-decoration: none;
+  text-indent: 0px;
+  text-transform: none;
+  white-space: normal;
+  word-spacing: normal;
+  font: normal 14px sans-serif;
+  visibility: visible;
+}
+
+#rikaichamp-window {
+  position: absolute;
+  /* asahi.com puts z-index: 1000000 on its banner ads. We go one better. */
+  z-index: 1000001;
+  padding: 0px;
+  top: 5px;
+  left: 5px;
+  min-width: 100px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 1px rgba(100, 100, 100, 0.25);
+  transition: opacity 0.05s;
+  will-change: opacity;
+  pointer-events: none;
+  contain: all;
+}
+
+#rikaichamp-window.hidden {
+  /*
+   * Make the popup stick around for a fraction of a second longer before hiding
+   */
+  transition-delay: 0.15s;
+  opacity: 0;
+}
+
+/* used for word definitions */
+
+#rikaichamp-window .wordlist {
+  display: flex;
+  flex-direction: column;
+}
+
+#rikaichamp-window .entry,
+#rikaichamp-window .more {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 3px 8px;
+}
+
+#rikaichamp-window .wordlist > .entry:first-child {
+  padding-top: 6px;
+}
+
+#rikaichamp-window .wordlist > .entry:last-child {
+  padding-bottom: 6px;
+}
+
+#rikaichamp-window .entry, #rikaichamp-window .entry * {
+  line-height: 1.2;
+}
+
+#rikaichamp-window .w-kanji {
+  font-size: 18px;
+  margin-right: 0.7em;
+}
+
+#rikaichamp-window .w-kana {
+  font-size: 18px;
+  margin-right: 0.3em;
+}
+
+#rikaichamp-window .w-romaji {
+  font-size: 14px;
+  margin-right: 0.3em;
+}
+
+#rikaichamp-window .w-kana + .w-romaji {
+  margin-left: 0.3em;
+}
+
+#rikaichamp-window .w-conj {
+  color: #FFE0A0;
+  font-size: 12px;
+}
+
+#rikaichamp-window .w-def {
+  font-size: 13px;
+}
+
+#rikaichamp-window .w-def .tag {
+  font-size: 10px;
+  border-radius: 3px;
+  margin-left: 0.5em;
+  padding: 0px 3px;
+}
+
+#rikaichamp-window .w-def .tag-female {
+  background: rgba(255,100,100,0.5);
+}
+
+#rikaichamp-window .w-def .tag-male {
+  background: rgba(0,100,255,0.5);
+}
+
+#rikaichamp-window .w-def .tag-place {
+  background: rgba(50,200,50,0.6);
+}
+
+#rikaichamp-window .entry.-selected {
+  background: rgba(255,255,206);
+  border-radius: 2px;
+}
+
+#rikaichamp-window .entry.-selected .w-def .tag {
+  color: black;
+  border-color: rgba(0,0,0,0.3) !important;
+}
+
+#rikaichamp-window .entry.-selected .w-kanji {
+  color: #4C63A8;
+}
+
+#rikaichamp-window .entry.-selected .w-kana,
+#rikaichamp-window .entry.-selected .w-romaji {
+  color: #029902;
+}
+
+#rikaichamp-window .entry.-selected .w-def {
+  color: rgb(0,0,50);
+}
+
+#rikaichamp-window .entry.-selected .w-conj {
+  color: #ff6300;
+}
+
+#rikaichamp-window .entry.-flash {
+  animation: flash 0.5s;
+}
+
+@keyframes flash {
+  from { background: white; color: white }
+}
+
+#rikaichamp-window .title {
+  font-size: 10px;
+  padding: 10px 10px 6px;
+  border-radius: 5px 5px 0 0;
+  margin-bottom: 3px;
+}
+
+#rikaichamp-window .name-table {
+  padding-bottom: 6px;
+}
+
+#rikaichamp-window .name-table.-multicol {
+  column-count: 2;
+  column-gap: 1em;
+}
+
+#rikaichamp-window .name-table.-multicol .entry {
+  /* Avoid column breaks within an entry */
+  display: table;
+}
+
+#rikaichamp-window .name-table .entry {
+  /*
+   * Something goes funny with the margins in multicol so that the entries
+   * no longer line up.
+   */
+  margin-top: 0;
+}
+
+/* used for kanji information */
+
+#rikaichamp-window .kanji-table {
+  width: 300px;
+  padding: 6px 10px;
+}
+
+#rikaichamp-window .k-kanji {
+  font-family: serif;
+  font-size: 48px;
+}
+
+#rikaichamp-window .kanji-table.-copy,
+#rikaichamp-window .kanji-table.-finished {
+  width: auto;
+  min-width: 300px;
+}
+
+#rikaichamp-window .kanji-table.-copy .k-kanji {
+  background: rgba(255,255,206);
+  border-radius: 2px;
+  color: #4C63A8;
+}
+
+#rikaichamp-window .kanji-table.-finished .k-kanji {
+  animation: flash 0.5s;
+}
+
+#rikaichamp-window .k-eigo {
+  font-size: 12px;
+}
+
+/* kanji: readings */
+
+#rikaichamp-window .k-yomi {
+  font-size: 14px;
+  margin: 4px 0px;
+}
+
+#rikaichamp-window .k-yomi-hi {
+  border: 1px solid red;
+}
+
+#rikaichamp-window .k-yomi-ti {
+  font-size: 11px;
+}
+
+/* kanji radical, grade, freq, strokes box */
+
+#rikaichamp-window .summary-box {
+  display: grid;
+  grid-template-columns: 60px 60px;
+  margin-bottom: 4px;
+  float: right;
+  clear: right;
+}
+
+#rikaichamp-window .summary-box > .cell {
+  font-size: 12px;
+  text-align: center;
+  padding: 1px 4px;
+}
+
+/* kanji components box */
+
+#rikaichamp-window .k-bbox-tb {
+  width: 120px;
+  margin-bottom: 4px;
+  float: right;
+  clear: right;
+}
+
+#rikaichamp-window .k-bbox-0a {
+  vertical-align: top;
+  font-size: 11px;
+  padding: 1px 3px;
+}
+
+#rikaichamp-window .k-bbox-0b {
+  vertical-align: top;
+  font-size: 11px;
+  padding: 1px 3px;
+}
+
+#rikaichamp-window .k-bbox-1a {
+  vertical-align: top;
+  font-size: 11px;
+  padding: 1px 3px;
+}
+
+#rikaichamp-window .k-bbox-1b {
+  vertical-align: top;
+  font-size: 11px;
+  padding: 1px 3px;
+}
+
+
+/* kanji: misc index */
+
+#rikaichamp-window .references {
+  display: grid;
+  grid-template-columns: auto 50px;
+  width: 100%
+}
+
+#rikaichamp-window .references > .name,
+#rikaichamp-window .references > .value {
+  font-size: 12px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/*
+ * Keyboard keys
+ */
+
+#rikaichamp-window .copy {
+  margin-top: 3px;
+  position: relative;
+  width: 100%;
+  max-height: 3em;
+}
+
+#rikaichamp-window .copy > .keys,
+#rikaichamp-window .copy > .status {
+  padding: 5px 8px 5px;
+  background: rgba(255,255,255,0.2);
+}
+
+#rikaichamp-window .copy > .keys kbd {
+  color: rgb(10,10,10);
+  font-size: .8rem;
+  font-family: monospace;
+  height: 1.2rem;
+  padding: .2rem;
+  border-radius: .2rem;
+  background: white;
+  border: 1px solid #909090 !important;
+}
+
+#rikaichamp-window .copy > .status {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#rikaichamp-window .copy.-finished > .keys,
+#rikaichamp-window .copy.-error > .keys {
+  animation: fade-out 0.4s linear forwards;
+}
+
+#rikaichamp-window .copy.-finished > .status {
+  opacity: 0;
+  animation: fade-in 0.4s linear forwards, fade-out 0.3s 0.9s forwards;
+}
+
+#rikaichamp-window .copy.-finished {
+  animation: roll-up 0.3s 1s forwards;
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  to { opacity: 1; }
+}
+
+@keyframes roll-up {
+  to { max-height: 0; }
+}
+
+#rikaichamp-window .copy.-error > .status {
+  opacity: 0;
+  animation: fade-in 0.4s linear forwards;
+}
+
+#rikaichamp-window .copy.-error > .status {
+  background: rgba(255, 204, 204, 0.8);
+  color: #b43e3e;
+}
+
+/*
+ * Theme - blue
+ */
+
+#rikaichamp-window.-blue, #rikaichamp-window.-blue * {
+  color: white;
+}
+
+#rikaichamp-window.-blue {
+  background: #5C73B8;
+}
+
+#rikaichamp-window.-blue .w-kanji {
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .w-conj {
+  color: #FFE0A0;
+}
+
+#rikaichamp-window.-blue .w-def .tag {
+  border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+#rikaichamp-window.-blue .title {
+  background: #4C63A8;
+  color: #FFFFFF;
+}
+
+#rikaichamp-window.-blue .k-kanji {
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .w-kana,
+#rikaichamp-window.-blue .w-romaji {
+  color: #C0FFC0;
+}
+
+#rikaichamp-window.-blue .k-yomi {
+  color: #C0FFC0;
+}
+
+#rikaichamp-window.-blue .k-yomi-hi {
+  color: #A0D0FF;
+}
+
+#rikaichamp-window.-blue .k-yomi-ti {
+  color: #E7FFE7;
+}
+
+#rikaichamp-window.-blue .summary-box > .cell {
+  background: #5A70B5;
+  color: #FFFFFF;
+}
+
+#rikaichamp-window.-blue .summary-box > .cell:nth-child(5n+2),
+#rikaichamp-window.-blue .summary-box > .cell:nth-child(5n+3) {
+  background: #4C63A8;
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .k-bbox-0a {
+  background: #5A70B5;
+  color: #FFFFFF;
+}
+
+#rikaichamp-window.-blue .k-bbox-0b {
+  background: #5A70B5;
+  color: #FFFFFF;
+}
+
+#rikaichamp-window.-blue .k-bbox-1a {
+  background: #4C63A8;
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .k-bbox-1b {
+  background: #4C63A8;
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .references > .name,
+#rikaichamp-window.-blue .references > .value {
+  background: #5A70B5;
+  color: #B7E7FF;
+}
+
+#rikaichamp-window.-blue .references > .name:nth-child(4n+3),
+#rikaichamp-window.-blue .references > .value:nth-child(4n+4) {
+  background: #4C63A8;
+  color: #FFFFFF;
+}
+
+/*
+ * Theme - black
+ */
+
+#rikaichamp-window.-black, #rikaichamp-window.-black * {
+  color: white;
+}
+
+#rikaichamp-window.-black {
+  background: #000000;
+}
+
+#rikaichamp-window.-black .w-kanji {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-black .w-kana,
+#rikaichamp-window.-black .w-romaji {
+  color: #20A020;
+}
+
+#rikaichamp-window.-black .w-conj {
+  color: #A0A0A0;
+}
+
+#rikaichamp-window.-black .w-def .tag {
+  border: 1px solid rgba(255,255,255,0.4) !important;
+}
+
+#rikaichamp-window.-black .entry.-selected .w-kanji {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-black .title {
+  background: #303030;
+  color: #E0E0E0;
+}
+
+#rikaichamp-window.-black .k-kanji {
+  color: #FFFFFF;
+}
+
+#rikaichamp-window.-black .kanji-table.-copy .k-kanji {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-black .k-yomi {
+  color: #20A020;
+}
+
+#rikaichamp-window.-black .k-yomi-hi {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-black .k-yomi-ti {
+  color: #E0E0E0;
+}
+
+#rikaichamp-window.-black .summary-box > .cell {
+  background: #505050;
+  color: #E0E0E0;
+}
+
+#rikaichamp-window.-black .summary-box > .cell:nth-child(5n+2),
+#rikaichamp-window.-black .summary-box > .cell:nth-child(5n+3) {
+  background: #303030;
+  color: #F0F0F0;
+}
+
+#rikaichamp-window.-black .k-bbox-0a {
+  background: #505050;
+  color: #E0E0E0;
+}
+
+#rikaichamp-window.-black .k-bbox-0b {
+  background: #505050;
+  color: #E0E0E0;
+}
+
+#rikaichamp-window.-black .k-bbox-1a {
+  background: #303030;
+  color: #F0F0F0;
+}
+
+#rikaichamp-window.-black .k-bbox-1b {
+  background: #303030;
+  color: #F0F0F0;
+}
+
+#rikaichamp-window.-black .references > .name,
+#rikaichamp-window.-black .references > .value {
+  background: #505050;
+  color: #F0F0F0;
+}
+
+#rikaichamp-window.-black .references > .name:nth-of-type(4n+3),
+#rikaichamp-window.-black .references > .value:nth-of-type(4n+4) {
+  background: #303030;
+  color: #E0E0E0;
+}
+
+/*
+ * Theme - lightblue
+ */
+
+#rikaichamp-window.-lightblue, #rikaichamp-window.-lightblue * {
+  color: black;
+}
+
+#rikaichamp-window.-lightblue {
+  background: #E6F4FF;
+}
+
+#rikaichamp-window.-lightblue .w-kanji {
+  color: #3082BF;
+}
+
+#rikaichamp-window.-lightblue .w-kana,
+#rikaichamp-window.-lightblue .w-romaji {
+  color: #00B366;
+}
+
+#rikaichamp-window.-lightblue .w-conj {
+  color: #808080;
+}
+
+#rikaichamp-window.-lightblue .w-def .tag {
+  border: 1px solid rgba(0,0,0,0.3) !important;
+}
+
+#rikaichamp-window.-lightblue .title {
+  background: #BFE4FF;
+  color: #000000;
+}
+
+#rikaichamp-window.-lightblue .k-kanji {
+  color: #000000;
+}
+
+#rikaichamp-window.-lightblue .k-yomi {
+  color: #00B366;
+}
+
+#rikaichamp-window.-lightblue .k-yomi-hi {
+  color: #00868B;
+}
+
+#rikaichamp-window.-lightblue .k-yomi-ti {
+  color: #000000;
+}
+
+#rikaichamp-window.-lightblue .summary-box > .cell {
+  background: #DFF1FF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .summary-box > .cell:nth-child(5n+2),
+#rikaichamp-window.-lightblue .summary-box > .cell:nth-child(5n+3) {
+  background: #FFFFFF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .k-bbox-0a {
+  background: #DFF1FF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .k-bbox-0b {
+  background: #DFF1FF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .k-bbox-1a,
+#rikaichamp-window.-lightblue .k-bbox-1b {
+  background: #FFFFFF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .references > .name,
+#rikaichamp-window.-lightblue .references > .value {
+  background: #DFF1FF;
+  color: #003D6B;
+}
+
+#rikaichamp-window.-lightblue .references > .name:nth-of-type(4n+3),
+#rikaichamp-window.-lightblue .references > .value:nth-of-type(4n+4) {
+  background: #FFFFFF;
+  color: #003D6B;
+}
+
+/*
+ * Theme - yellow
+ */
+
+#rikaichamp-window.-yellow, #rikaichamp-window.-yellow * {
+  color: black;
+}
+
+#rikaichamp-window.-yellow {
+  color: #111;
+  background: #FFFFBF;
+}
+
+#rikaichamp-window.-yellow .w-kanji {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-yellow .w-kana,
+#rikaichamp-window.-yellow .w-romaji {
+  color: #20A020;
+}
+
+#rikaichamp-window.-yellow .w-conj {
+  color: #A0A0A0;
+}
+
+#rikaichamp-window.-yellow .w-def .tag {
+  border: 1px solid rgba(0,0,0,0.3) !important;
+}
+
+#rikaichamp-window.-yellow .entry.-selected {
+  background: #d4edf9;
+}
+
+#rikaichamp-window.-yellow .entry.-selected .w-kanji {
+  color: #7070E0;
+}
+
+#rikaichamp-window.-yellow .entry.-selected .w-kana,
+#rikaichamp-window.-yellow .entry.-selected .w-romaji {
+  color: #20A020;
+}
+
+#rikaichamp-window.-yellow .title {
+  background: #F0F0B0;
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .k-kanji {
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .kanji-table.-copy .k-kanji {
+  background: #d4edf9;
+  color: #7070E0;
+}
+
+#rikaichamp-window.-yellow .k-yomi {
+  color: #20A020;
+}
+
+#rikaichamp-window.-yellow .k-yomi-hi {
+  color: #CD5C5C;
+}
+
+#rikaichamp-window.-yellow .k-yomi-ti {
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .summary-box > .cell {
+  background: #FFFFE6;
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .summary-box > .cell:nth-child(5n+2),
+#rikaichamp-window.-yellow .summary-box > .cell:nth-child(5n+3) {
+  background: #F7F7D0;
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .k-bbox-0a,
+#rikaichamp-window.-yellow .k-bbox-0b {
+  background: #FFFFE6;
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .k-bbox-1a,
+#rikaichamp-window.-yellow .k-bbox-1b {
+  background: #F7F7D0;
+  color: #000000;
+}
+
+#rikaichamp-window.-yellow .references > .name,
+#rikaichamp-window.-yellow .references > .value {
+  background: #FFFFE6;
+  color: black;
+}
+
+#rikaichamp-window.-yellow .references > .name:nth-of-type(4n+3),
+#rikaichamp-window.-yellow .references > .value:nth-of-type(4n+4) {
+  background: #F7F7D0;
+  color: black;
+}
