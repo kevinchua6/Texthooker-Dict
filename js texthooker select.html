@@ -113,10 +113,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 
 
-	<div id="demo">
-		<h2>The XMLHttpRequest Object</h2>
-		<button type="button" onclick="loadDoc()">Change Content</button>
-		</div>
+
 <div class="container">
 	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
 	<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
@@ -125,26 +122,14 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <!-- End button div. -->
 
 <!-- This is the div used for the counter. -->
-	<div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
+	<div id="counter" title="No. of characters / No. of lines">4,838 / 170</div>
 <!-- End counter div. -->
 
 
 </div>
 	
-<script>
-	function loadDoc() {
-	  var xhttp = new XMLHttpRequest();
-	  xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-		  document.getElementById("demo").innerHTML =
-		  this.responseText;
-		}
-	  };
-	  xhttp.open("GET", "ajax_info.txt", true);
-	  xhttp.send();
-	}
-	</script>
-
+<button id="buttonz">Hey you!</button>
+<div id="target">d</div>
 
 <!-- jQuery is needed for the page to run. You can change this to an offline version if you prefer. -->
 		<meta charset="utf-8">
@@ -156,6 +141,37 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
+
+function readTextFile(file)
+{
+    $( "#target" ).load(file);
+}
+
+
+$("#buttonz").click(function(){
+	console.log('hello')
+	readTextFile('text.txt')
+})
+
+// Code that adds a delay to the selection detection to prevent multiple detections
+function debounce(fn, delay) {
+  let timer = null;
+  return function () {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
+};
+
+// Listens for selections 
+document.addEventListener("selectionchange", debounce(function (event) {
+  let selection = document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString();
+  console.log(selection);
+}, 250));
+
+
 
 function scrollToNewestLine(){
         // Find position of last element
@@ -203,7 +219,7 @@ const callback_DOM = function(mutationsList, observer) {
 	  var linesdisp = lines.toLocaleString();
 	  
 	  //Print the new counts into the counter.
-	  jQuery('#counter').text("Chars: "+charsdisp+' / Lines: '+linesdisp);
+	  jQuery('#counter').text(charsdisp+' / '+linesdisp);
 	  
 	  //Get ready for the next line.
 	  oldlines = lines;
@@ -223,9 +239,9 @@ const callback_DOM = function(mutationsList, observer) {
 const observer = new MutationObserver(callback_DOM);
 observer.observe(document, config);
 
-
-
-
+// document.addEventListener("DOMNodeInserted", function () {
+	//code here
+// }, false);
 
 //End of scroller and counter script.
 
@@ -314,6 +330,8 @@ $("#toggle-light").click(function(){
 
 });
 </script>
-
+<p>どれだけ空を見上げてたって君は飛べないって君が言った</p>
+<p>どれだけ空を見上げてたって君は飛べないって君が言った</p>
+<p>あとなんかい手を伸ばせばとこくのだろうと泣いた夜</p>
 
 </html>
