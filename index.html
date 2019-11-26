@@ -167,13 +167,14 @@ function debounce(fn, delay) {
 
 // Listens for selections 
 document.addEventListener("selectionchange", debounce(function (event) {
-  let selection = document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString();
-  console.log(selection);
-  if (wordDict.includes(selection)){
-	console.log('wordDict: 'wordDict)
-	console.log('selection: '+selection)
-	  alert('woo hoo!')
-  }
+	//if selection is not blank
+	let selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
+	console.log(selection);
+	if (wordDict.includes(selection) && selection !== ''){
+		console.log('wordDict: ' +wordDict)
+		console.log('selection: '+selection)
+		alert('woo hoo!')
+	}
 }, 250));
 
 
