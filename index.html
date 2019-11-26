@@ -115,7 +115,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 
 	<div id="demo">
 		<h2>The XMLHttpRequest Object</h2>
-		<button type="button" onclick="loadDoc()">Change Content</button>
+		<button type="button" onclick="loadDictionary()">Change Content</button>
 		</div>
 <div class="container">
 	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
@@ -131,21 +131,6 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 
 </div>
 	
-<script>
-function loadDoc() {
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	if (this.readyState == 4 && this.status == 200) {
-		document.getElementById("demo").innerHTML =
-		this.responseText;
-	}
-	};
-	xhttp.open("GET", "dict.dat", true);
-	xhttp.send();
-}
-</script>
-
-
 <!-- jQuery is needed for the page to run. You can change this to an offline version if you prefer. -->
 		<meta charset="utf-8">
 		<title>Texthooker</title>
@@ -156,6 +141,19 @@ function loadDoc() {
 <script>
 
 $(document).ready(function(){
+
+//loads dictionary
+function loadDictionary(){
+	var req = new XMLHttpRequest();
+	req.open("GET", "dict.dat", false);
+	//req.open("GET", "data/dict.dat", false);
+	req.send();
+	return req.responseText;
+}
+
+//loads the dictionary as one continuous string to reduce memory use
+const wordDict = loadDictionary();
+alert(wordDict);
 
 function scrollToNewestLine(){
         // Find position of last element
