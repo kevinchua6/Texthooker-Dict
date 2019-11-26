@@ -113,10 +113,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 
 
-	<div id="demo">
-		<h2>The XMLHttpRequest Object</h2>
-		<button type="button" onclick="loadDictionary()">Change Content</button>
-		</div>
+<div>何気無く死んでいた。俺はそういう人間なんだぜ。</div>
 <div class="container">
 	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
 	<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
@@ -146,14 +143,37 @@ $(document).ready(function(){
 function loadDictionary(){
 	var req = new XMLHttpRequest();
 	req.open("GET", "dict.dat", false);
-	//req.open("GET", "data/dict.dat", false);
+	//req.open("GET", "data/dict.dat", false); add this when everything is done
 	req.send();
 	return req.responseText;
 }
 
 //loads the dictionary as one continuous string to reduce memory use
 const wordDict = loadDictionary();
-alert(wordDict);
+//alert(wordDict);
+
+
+// Code that adds a delay to the selection detection to prevent multiple detections
+function debounce(fn, delay) {
+  let timer = null;
+  return function () {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
+};
+
+// Listens for selections 
+document.addEventListener("selectionchange", debounce(function (event) {
+  let selection = document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString();
+  console.log(selection);
+  if (wordDict.includes(selection)){
+	  alert('woo hoo!')
+  }
+}, 250));
+
 
 function scrollToNewestLine(){
         // Find position of last element
