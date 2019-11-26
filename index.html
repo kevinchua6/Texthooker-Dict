@@ -122,7 +122,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <!-- End button div. -->
 
 <!-- This is the div used for the counter. -->
-	<div id="counter" title="No. of characters / No. of lines">4,838 / 170</div>
+	<div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
 <!-- End counter div. -->
 
 
@@ -164,11 +164,13 @@ function scrollToNewestLine(){
 oldlines = 0;
 chars = 0;
 
-//This listens for a node (line) to be inserted.
-document.addEventListener("DOMNodeInserted", function () {
-    
-  //Counter begins here. Get the current number of lines first.
-  var lines = document.getElementsByTagName('p').length;
+//Replacement for the event listener for DOM nodes
+// Options for the observer (which mutations to observe)
+const config = { attributes: true, childList: true, subtree: true };
+// Callback function to execute when mutations are observed
+const callback_DOM = function(mutationsList, observer) {
+	//Counter begins here. Get the current number of lines first.
+	var lines = document.getElementsByTagName('p').length;
   
   //Second, confirm whether the node insertion was a new line.
   //(Rikai also inserts and removes a node (a div).)
@@ -186,7 +188,7 @@ document.addEventListener("DOMNodeInserted", function () {
 	  var linesdisp = lines.toLocaleString();
 	  
 	  //Print the new counts into the counter.
-	  jQuery('#counter').text(charsdisp+' / '+linesdisp);
+	  jQuery('#counter').text("Chars: "+charsdisp+' / Lines: '+linesdisp);
 	  
 	  //Get ready for the next line.
 	  oldlines = lines;
@@ -195,17 +197,20 @@ document.addEventListener("DOMNodeInserted", function () {
       //The counter ends here and the text-scroller is below.
       //I've included it in the "if new line" statement.
       //(That is, it won't run unless a new line was added.)
-      //Like this it won't autoscroll down every time Rikai is used.
-
-
-        
+	  //Like this it won't autoscroll down every time Rikai is used.
+	  
       var latest_scroll_position = scrollToNewestLine();
        
-  
-	
   }; //This is the end of the "if new line" statement.
-  
-}, false);
+
+};
+// Create an observer instance linked to the callback function
+const observer = new MutationObserver(callback_DOM);
+observer.observe(document, config);
+
+
+
+
 
 //End of scroller and counter script.
 
