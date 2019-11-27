@@ -143,7 +143,7 @@ $(document).ready(function(){
 function loadDictionary(){
 	var req = new XMLHttpRequest();
 	//req.open("GET", "dict.dat", true);
-	req.open("GET", "data/dict.dat", true); //add this when everything is done
+	req.open("GET", "data/dict.dat", false); //add this when everything is done
 	req.send();
 	return req.responseText;
 }
