@@ -219,7 +219,7 @@ document.addEventListener("selectionchange", debounce(function (event) {
 			var def_word_regex = selection + "[^\n]+"
 			var def_word = wordDict.matchAll(def_word_regex)
 			for (var def of def_word){
-				console.log(i)
+				console.log(def)
 			}
 		}
 	}
