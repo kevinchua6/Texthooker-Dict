@@ -176,6 +176,25 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
+	//Loads the old text
+	loadText()
+
+function saveTextIntoString(){
+	//Saves the text
+	var entire_text = document.getElementsByTagName("p");
+	var entire_text_string = ''
+	for (line of entire_text) {
+		entire_text_string += "<p>"+line.innerHTML+"</p>"
+	}
+	localStorage.setItem('saved_text', entire_text_string);
+	alert('Text saved!');
+}
+
+function loadText(){
+	var entire_text_string = localStorage.getItem('saved_text');
+	document.body.innerHTML += entire_text_string
+}
+
 
 //loads dictionary
 function loadDictionary(){
@@ -289,6 +308,17 @@ chars = 0;
 const config = { attributes: true, childList: true, subtree: true };
 // Callback function to execute when mutations are observed
 const callback_DOM = function(mutationsList, observer) {
+	// Saves everytime a new node is inserted.
+	saveTextIntoString();
+	//Cancel previous time if exists
+
+	// if (timeBeforeSave){
+	// 	clearTimeout(timeBeforeSave)
+	// }
+	
+	//Wait 20s before it saves
+	//var timeBeforeSave = setTimeout(saveTextIntoString, 3000)
+
 	//Counter begins here. Get the current number of lines first.
 	var lines = document.getElementsByTagName('p').length;
   
@@ -325,7 +355,8 @@ const callback_DOM = function(mutationsList, observer) {
 };
 // Create an observer instance linked to the callback function
 const observer = new MutationObserver(callback_DOM);
-observer.observe(document, config);
+const targetNode = document.body;
+observer.observe(targetNode, config);
 
 
 
