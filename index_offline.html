@@ -187,7 +187,7 @@ function saveTextIntoString(){
 		entire_text_string += "<p>"+line.innerHTML+"</p>"
 	}
 	localStorage.setItem('saved_text', entire_text_string);
-	alert('Text saved!');
+	//alert('Text saved!');
 }
 
 function loadText(){
@@ -307,17 +307,17 @@ chars = 0;
 // Options for the observer (which mutations to observe)
 const config = { attributes: true, childList: true, subtree: true };
 // Callback function to execute when mutations are observed
+var timeBeforeSave;
 const callback_DOM = function(mutationsList, observer) {
 	// Saves everytime a new node is inserted.
-	saveTextIntoString();
+	//saveTextIntoString();
 	//Cancel previous time if exists
-
-	// if (timeBeforeSave){
-	// 	clearTimeout(timeBeforeSave)
-	// }
+	
+	clearTimeout(timeBeforeSave)
+	
 	
 	//Wait 20s before it saves
-	//var timeBeforeSave = setTimeout(saveTextIntoString, 3000)
+	timeBeforeSave = setTimeout(saveTextIntoString, 20000)
 
 	//Counter begins here. Get the current number of lines first.
 	var lines = document.getElementsByTagName('p').length;
