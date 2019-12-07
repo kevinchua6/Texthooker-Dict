@@ -192,7 +192,9 @@ function saveTextIntoString(){
 
 function loadText(){
 	var entire_text_string = localStorage.getItem('saved_text');
-	document.body.innerHTML += entire_text_string
+	if (entire_text_string){
+		document.body.innerHTML += entire_text_string
+	}
 }
 
 
