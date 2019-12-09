@@ -148,8 +148,6 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 ------------------------>
 <link rel="stylesheet" type="text/css" href="Texthookertest_files/popup.css" id="rikaichamp-css"></head>
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
-
-
 <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div>
 <div class="container">
 	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
@@ -161,8 +159,6 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <!-- This is the div used for the counter. -->
 	<div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
 <!-- End counter div. -->
-
-
 </div>
 <div id="dimScreen"></div>
 <div id="loader"></div>
@@ -176,8 +172,8 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
-	//Loads the old text
-	loadText()
+	//Loads the old saved text
+	loadSavedText()
 
 function saveTextIntoString(){
 	//Saves the text
@@ -190,7 +186,7 @@ function saveTextIntoString(){
 	//alert('Text saved!');
 }
 
-function loadText(){
+function loadSavedText(){
 	var entire_text_string = localStorage.getItem('saved_text');
 	if (entire_text_string){
 		document.body.innerHTML += entire_text_string
@@ -210,6 +206,7 @@ function loadDictionary(){
 	console.log("dictionary: "+ req.responseText);
 	return req.responseText;
 }
+
 document.getElementById("loader").style.display = "none"; //remove
 document.getElementById("dimScreen").style.display = "none"; //remove
 //loads the dictionary as one continuous string to reduce memory use
@@ -254,10 +251,9 @@ function debounce(fn, delay) {
   };
 };
 
-// Listens for selections 
-document.addEventListener("selectionchange", debounce(function (event) {
+function getDefinition(){
+	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	//if selection is not blank
-	let selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	if (selection !== ''){
 		console.log("What I selected: "+ selection);
         //If word is in dict
@@ -267,19 +263,37 @@ document.addEventListener("selectionchange", debounce(function (event) {
 			//alert('woo hoo!')
 
             //Find the word in its proper definition (ie not inside other words like "in" in "inside")
-			var def_word_regex = "^"+selection + "[^\n]+";
-			var def_word = wordDict.matchAll(/def_word_regex/m);
+			//https://regex101.com/ good website for regex
+			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
+			var def_word_re = wordDict.matchAll(re);
 			var all_def = '';
-			for (var def of def_word){
+			for (var def of def_word_re){
 				all_def += def + "\n ";
 			};
 
             //Makes sure that the definition is not blank
             if (all_def != ""){
-			console.log("I am the definition: " + all_def.slice(0,-3))
-            }
+				console.log("I am the definition: " + all_def.slice(0,-3))
+				return (all_def);
+			}
         }
 	}
+}
+
+
+
+function displayDefinition(def){
+}
+
+
+
+// Listens for selections 
+document.addEventListener("selectionchange", debounce(function (event) {
+	wordDefinition = getDefinition();
+	if (wordDefinition){
+		displayDefinition(wordDefinition);
+	}
+
 }, 250));
 
 
