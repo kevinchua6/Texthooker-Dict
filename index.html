@@ -192,6 +192,27 @@ $(document).ready(function(){
 
 	//Loads the old saved text
 	loadSavedText()
+	//loads the dictionary as one continuous string to reduce memory use
+	loadDictionary(wordDict => {
+		// Delete loading screen
+		document.getElementById("loader").style.display = "none";
+		document.getElementById("dimScreen").style.display = "none";
+
+		// Listens for selections 
+		document.addEventListener("selectionchange", debounce(function (event) {
+			//Remove old definition
+			document.getElementById('selection_popup').style.display = 'none';
+
+			wordDefinition = getDefinition(wordDict);
+			if (wordDefinition){
+				window.setTimeout(displayDefinition(wordDefinition), 1000)
+			}
+
+		}, 250));
+	});
+
+
+
 
 function saveTextIntoString(){
 	//Saves the text
@@ -349,24 +370,6 @@ function displayDefinition(def){
 			}
     };
 }
-//loads the dictionary as one continuous string to reduce memory use
-loadDictionary(wordDict => {
-	// Delete loading screen
-	document.getElementById("loader").style.display = "none";
-	document.getElementById("dimScreen").style.display = "none";
-
-	// Listens for selections 
-	document.addEventListener("selectionchange", debounce(function (event) {
-		//Remove old definition
-		document.getElementById('selection_popup').style.display = 'none';
-
-		wordDefinition = getDefinition(wordDict);
-		if (wordDefinition){
-			window.setTimeout(displayDefinition(wordDefinition), 1000)
-		}
-
-	}, 250));
-});
 
 function scrollToNewestLine(){
         // Find position of last element
