@@ -88,6 +88,15 @@ body {
 	cursor:hand;
 }
 
+#selection_popup {
+	color: black;
+	border: solid darkblue 1px;
+	background-color: lightgoldenrodyellow;
+	position: absolute;
+	display: none;
+	white-space: pre-line;
+}
+
 .toggle_scrolling_button {
 	background-color:rgba(25,25,25,0.8);
 	color:#9d9d9d;
@@ -146,6 +155,7 @@ For various other free Japanese fonts, visit http://www.freejapanesefont.com/
 For more font attribute information visit http://www.w3schools.com/css/css_font.asp
 
 ------------------------>
+<div id="selection_popup">&lt;- selection</div>
 <link rel="stylesheet" type="text/css" href="Texthookertest_files/popup.css" id="rikaichamp-css"></head>
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div>
@@ -172,6 +182,10 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
+	//Change the color of the text of the definition when it becomes light/dark mode
+	//when click/ touchscreen/highlights other stuff it removes the definition
+
+
 	//Loads the old saved text
 	loadSavedText()
 
@@ -283,19 +297,13 @@ function getDefinition(){
 
 
 function displayDefinition(def){
-	window.setTimeout(markSelection(), 1000);
-}
-
-var markSelection = (function() {
 	//Unicode stuff
-    var markerTextChar = "\ufeff";
+	var markerTextChar = "\ufeff";
     var markerTextCharEntity = "&#xfeff;";
 
 	//Assign markerId to the thing on the right and declare markerEl
-	//MarkerId would be very unique, combining time and a random string 
+	//Make markerId unique, combining time and a random string 
     var markerEl, markerId = "sel_" + new Date().getTime() + "_" + Math.random().toString().substr(2);
-
-    var selectionEl;
 
     return function(win) {
 		//Asign win to window if win is falsy
@@ -303,6 +311,9 @@ var markSelection = (function() {
 		//Document of window
         var doc = win.document;
         var sel, range;
+
+		var selectionEl = doc.getElementById('selection_popup');
+
         // Branch for IE <= 8 
         if (doc.selection && doc.selection.createRange) {
             // Clone the TextRange and collapse
@@ -331,44 +342,56 @@ var markSelection = (function() {
         if (markerEl) {
             // Lazily create element to be placed next to the selection
 
-			// If selectionEl is not defined yet
-			//NOTE: just create selectionEl beforehand/in the html so that it would not get scrolled down all the time
-            if (!selectionEl) {
-                selectionEl = doc.createElement("div");
-                selectionEl.style.border = "solid darkblue 1px";
-                selectionEl.style.backgroundColor = "lightgoldenrodyellow";
-                selectionEl.innerHTML = "&lt;- selection";
-                selectionEl.style.position = "absolute";
+			// // If selectionEl is not defined yet
+			// //NOTE: just create selectionEl beforehand/in the html so that it would not get scrolled down all the time
+            // if (!selectionEl) {
+            //     selectionEl = doc.createElement("div");
+            //     selectionEl.style.border = "solid darkblue 1px";
+            //     selectionEl.style.backgroundColor = "lightgoldenrodyellow";
+            //     selectionEl.innerHTML = "&lt;- selection";
+            //     selectionEl.style.position = "absolute";
 
-                doc.body.appendChild(selectionEl);
-            }
+            //     doc.body.appendChild(selectionEl);
+            // }
 
      	 	// Find markerEl position http://www.quirksmode.org/js/findpos.html
 
 			// assign obj to marker element
 			var obj = markerEl;
-			
+
 			var left = 0, top = 0;
 			do {
 				left += obj.offsetLeft;
 				top += obj.offsetTop;
 			} while (obj = obj.offsetParent);
 
+			//minor adjustments to the placement of the text
+			left += 15;
+			top += 35;
+
 			// Move the button into place.
 			// Substitute your jQuery stuff in here
+			selectionEl.style.display = 'block';
 			selectionEl.style.left = left + "px";
 			selectionEl.style.top = top + "px";
+
+			//Change the text to the definition
+			selectionEl.innerHTML = def;
 
 			markerEl.parentNode.removeChild(markerEl);
 			}
     };
-})();
+}
+
+
+
+
 
 // Listens for selections 
 document.addEventListener("selectionchange", debounce(function (event) {
 	wordDefinition = getDefinition();
 	if (wordDefinition){
-		displayDefinition(wordDefinition);
+		window.setTimeout(displayDefinition(wordDefinition), 1000)
 	}
 
 }, 250));
