@@ -216,12 +216,23 @@ function loadSavedText(){
 function loadDictionary(){
 	var req = new XMLHttpRequest();
 	//req.open("GET", "dict.dat", false);
-	req.open("GET", "data/dict.dat", false); //add this when everything is done
-	// Delete loading screen
-	document.getElementById("loader").style.display = "none";
-	document.getElementById("dimScreen").style.display = "none";
+	req.open("GET", "data/dict.dat", true); //add this when everything is done
+	req.onload = function (e) {
+		if (req.readyState === 4) {
+			if (req.status === 200) {
+				console.log("dictionary: "+ req.responseText.slice(0,50) + '...');;
+			} else {
+			console.error(req.statusText);
+			}
+		}
+	};
+
+	req.onerror = function (e) {
+		console.error(req.statusText);
+	};
+
 	req.send();
-	console.log("dictionary: "+ req.responseText);
+	
 	return req.responseText;
 }
 
