@@ -193,21 +193,24 @@ $(document).ready(function(){
 	//Loads the old saved text
 	loadSavedText()
 	//loads the dictionary as one continuous string to reduce memory use
-	const wordDict = loadDictionary();
+	loadDictionary(wordDict =>{
+		// Listens for selections 
+		document.addEventListener("selectionchange", debounce(function (event) {
+			
+			//Remove old definition
+			document.getElementById('selection_popup').style.display = 'none';
+
+			wordDefinition = getDefinition(wordDict);
+			if (wordDefinition){
+				window.setTimeout(displayDefinition(wordDefinition), 1000)
+			}
+
+		}, 250));
+
+	});
 
 
-	// Listens for selections 
-	document.addEventListener("selectionchange", debounce(function (event) {
-		
-		//Remove old definition
-		document.getElementById('selection_popup').style.display = 'none';
 
-		wordDefinition = getDefinition(wordDict);
-		if (wordDefinition){
-			window.setTimeout(displayDefinition(wordDefinition), 1000)
-		}
-
-	}, 250));
 
 
 
@@ -232,7 +235,7 @@ function loadSavedText(){
 
 
 //loads dictionary
-function loadDictionary(){
+function loadDictionary(callback){
 	var req = new XMLHttpRequest();
 
 	req.onreadystatechange = function(){
@@ -240,7 +243,7 @@ function loadDictionary(){
 			// Delete loading screen
 			document.getElementById("loader").style.display = "none";
 			document.getElementById("dimScreen").style.display = "none";
-			return (req.responseText);
+			callback (req.responseText);
 		}
 	}
 
