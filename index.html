@@ -394,6 +394,8 @@ chars = 0;
 
 //Replacement for the event listener for DOM nodes
 // Options for the observer (which mutations to observe)
+const config = { attributes: true, childList: true, subtree: true };
+// Callback function to execute when mutations are observed
 var timeBeforeSave;
 const callback_DOM = function(mutationsList, observer) {
 	// Saves everytime a new node is inserted.
