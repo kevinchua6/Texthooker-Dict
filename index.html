@@ -213,7 +213,7 @@ function loadSavedText(){
 
 
 //loads dictionary
-function loadDictionary(){
+function loadDictionary(callback){
 	var req = new XMLHttpRequest();
 	//req.open("GET", "dict.dat", false);
 	req.open("GET", "data/dict.dat", true); //add this when everything is done
@@ -233,12 +233,8 @@ function loadDictionary(){
 
 	req.send();
 	
-	return req.responseText;
+	return callback(req.responseText);
 }
-
-//loads the dictionary as one continuous string to reduce memory use
-const wordDict = loadDictionary();
-
 
 // Code that adds a delay to the selection detection to prevent multiple detections
 function debounce(fn, delay) {
@@ -252,7 +248,7 @@ function debounce(fn, delay) {
   };
 };
 
-function getDefinition(){
+function getDefinition(wordDict){
 	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	//if selection is not blank
 	if (selection !== ''){
@@ -367,19 +363,20 @@ function displayDefinition(def){
 			}
     };
 }
+//loads the dictionary as one continuous string to reduce memory use
+loadDictionary(wordDict => {
+	// Listens for selections 
+	document.addEventListener("selectionchange", debounce(function (event) {
+		//Remove old definition
+		document.getElementById('selection_popup').style.display = 'none';
 
-// Listens for selections 
-document.addEventListener("selectionchange", debounce(function (event) {
-	//Remove old definition
-	document.getElementById('selection_popup').style.display = 'none';
+		wordDefinition = getDefinition(wordDict);
+		if (wordDefinition){
+			window.setTimeout(displayDefinition(wordDefinition), 1000)
+		}
 
-	wordDefinition = getDefinition();
-	if (wordDefinition){
-		window.setTimeout(displayDefinition(wordDefinition), 1000)
-	}
-
-}, 250));
-
+	}, 250));
+});
 
 function scrollToNewestLine(){
         // Find position of last element
