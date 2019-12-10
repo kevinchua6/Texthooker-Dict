@@ -283,9 +283,86 @@ function getDefinition(){
 
 
 function displayDefinition(def){
+	window.setTimeout(markSelection(), 1000);
 }
 
+var markSelection = (function() {
+	//Unicode stuff
+    var markerTextChar = "\ufeff";
+    var markerTextCharEntity = "&#xfeff;";
 
+	//Assign markerId to the thing on the right and declare markerEl
+	//MarkerId would be very unique, combining time and a random string 
+    var markerEl, markerId = "sel_" + new Date().getTime() + "_" + Math.random().toString().substr(2);
+
+    var selectionEl;
+
+    return function(win) {
+		//Asign win to window if win is falsy
+        win = win || window;
+		//Document of window
+        var doc = win.document;
+        var sel, range;
+        // Branch for IE <= 8 
+        if (doc.selection && doc.selection.createRange) {
+            // Clone the TextRange and collapse
+            range = doc.selection.createRange().duplicate();
+            range.collapse(false);
+
+            // Create the marker element containing a single invisible character by creating literal HTML and insert it
+            range.pasteHTML('<span id="' + markerId + '" style="position: relative;">' + markerTextCharEntity + '</span>');
+            markerEl = doc.getElementById(markerId);
+        } else if (win.getSelection) {
+			//For IE >= 9
+            sel = win.getSelection();
+            range = sel.getRangeAt(0).cloneRange();
+			//Collapse range to the end (shorten it)
+            range.collapse(false);
+
+            // Create the marker element containing a single invisible character using DOM methods and insert it
+            markerEl = doc.createElement("span");
+            markerEl.id = markerId;
+			//?
+            markerEl.appendChild( doc.createTextNode(markerTextChar) );
+			//Inserts a node at the start of the range
+            range.insertNode(markerEl);
+        }
+
+        if (markerEl) {
+            // Lazily create element to be placed next to the selection
+
+			// If selectionEl is not defined yet
+			//NOTE: just create selectionEl beforehand/in the html so that it would not get scrolled down all the time
+            if (!selectionEl) {
+                selectionEl = doc.createElement("div");
+                selectionEl.style.border = "solid darkblue 1px";
+                selectionEl.style.backgroundColor = "lightgoldenrodyellow";
+                selectionEl.innerHTML = "&lt;- selection";
+                selectionEl.style.position = "absolute";
+
+                doc.body.appendChild(selectionEl);
+            }
+
+     	 	// Find markerEl position http://www.quirksmode.org/js/findpos.html
+
+			// assign obj to marker element
+			var obj = markerEl;
+			
+			var left = 0, top = 0;
+			do {
+				left += obj.offsetLeft;
+				top += obj.offsetTop;
+			} while (obj = obj.offsetParent);
+
+			// Move the button into place.
+			// Substitute your jQuery stuff in here
+			selectionEl.style.left = left + "px";
+			selectionEl.style.top = top + "px";
+
+			markerEl.parentNode.removeChild(markerEl);
+			}
+    };
+})();
 
 // Listens for selections 
 document.addEventListener("selectionchange", debounce(function (event) {
