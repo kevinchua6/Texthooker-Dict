@@ -233,7 +233,7 @@ function loadDictionary(callback){
 
 	req.send();
 	
-	return callback(req.responseText);
+	callback(req.responseText);
 }
 
 // Code that adds a delay to the selection detection to prevent multiple detections
@@ -323,20 +323,6 @@ function displayDefinition(def){
         if (markerEl) {
             // Lazily create element to be placed next to the selection
 
-			// // If selectionEl is not defined yet
-			// //NOTE: just create selectionEl beforehand/in the html so that it would not get scrolled down all the time
-            // if (!selectionEl) {
-            //     selectionEl = doc.createElement("div");
-            //     selectionEl.style.border = "solid darkblue 1px";
-            //     selectionEl.style.backgroundColor = "lightgoldenrodyellow";
-            //     selectionEl.innerHTML = "&lt;- selection";
-            //     selectionEl.style.position = "absolute";
-
-            //     doc.body.appendChild(selectionEl);
-            // }
-
-     	 	// Find markerEl position http://www.quirksmode.org/js/findpos.html
-
 			// assign obj to marker element
 			var obj = markerEl;
 
@@ -365,6 +351,10 @@ function displayDefinition(def){
 }
 //loads the dictionary as one continuous string to reduce memory use
 loadDictionary(wordDict => {
+	// Delete loading screen
+	document.getElementById("loader").style.display = "none";
+	document.getElementById("dimScreen").style.display = "none";
+
 	// Listens for selections 
 	document.addEventListener("selectionchange", debounce(function (event) {
 		//Remove old definition
