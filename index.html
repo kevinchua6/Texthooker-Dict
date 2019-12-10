@@ -194,12 +194,14 @@ $(document).ready(function(){
 	loadSavedText()
 	//loads the dictionary as one continuous string to reduce memory use
 	loadDictionary(wordDict => {
+		console.log(wordDict)
 		// Delete loading screen
 		document.getElementById("loader").style.display = "none";
 		document.getElementById("dimScreen").style.display = "none";
 
 		// Listens for selections 
 		document.addEventListener("selectionchange", debounce(function (event) {
+			
 			//Remove old definition
 			document.getElementById('selection_popup').style.display = 'none';
 
@@ -236,25 +238,16 @@ function loadSavedText(){
 //loads dictionary
 function loadDictionary(callback){
 	var req = new XMLHttpRequest();
+
+	req.onreadystatechange = function(){
+		if (this.readyState==4 && this.status == 200) {
+			return (req.responseText);
+		}
+	}
+
 	//req.open("GET", "dict.dat", false);
 	req.open("GET", "data/dict.dat", true); //add this when everything is done
-	req.onload = function (e) {
-		if (req.readyState === 4) {
-			if (req.status === 200) {
-				console.log("dictionary: "+ req.responseText.slice(0,50) + '...');;
-			} else {
-			console.error(req.statusText);
-			}
-		}
-	};
-
-	req.onerror = function (e) {
-		console.error(req.statusText);
-	};
-
 	req.send();
-	
-	callback(req.responseText);
 }
 
 // Code that adds a delay to the selection detection to prevent multiple detections
@@ -270,6 +263,7 @@ function debounce(fn, delay) {
 };
 
 function getDefinition(wordDict){
+	console.log(wordDict)
 	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	//if selection is not blank
 	if (selection !== ''){
