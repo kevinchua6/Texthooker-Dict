@@ -215,8 +215,8 @@ function loadSavedText(){
 //loads dictionary
 function loadDictionary(){
 	var req = new XMLHttpRequest();
-	req.open("GET", "dict.dat", false);
-	//req.open("GET", "data/dict.dat", false); //add this when everything is done
+	//req.open("GET", "dict.dat", false);
+	req.open("GET", "data/dict.dat", false); //add this when everything is done
 	// Delete loading screen
 	document.getElementById("loader").style.display = "none";
 	document.getElementById("dimScreen").style.display = "none";
