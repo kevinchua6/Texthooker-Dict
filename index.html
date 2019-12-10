@@ -88,6 +88,15 @@ body {
 	cursor:hand;
 }
 
+#selection_popup {
+	color: black;
+	border: solid darkblue 1px;
+	background-color: lightgoldenrodyellow;
+	position: absolute;
+	display: none;
+	white-space: pre-line;
+}
+
 .toggle_scrolling_button {
 	background-color:rgba(25,25,25,0.8);
 	color:#9d9d9d;
@@ -176,8 +185,12 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
-//Loads the old text
-loadText()
+	//Change the color of the text of the definition when it becomes light/dark mode
+	//when click/ touchscreen/highlights other stuff it removes the definition
+
+
+	//Loads the old saved text
+	loadSavedText()
 
 function saveTextIntoString(){
 	//Saves the text
@@ -190,9 +203,11 @@ function saveTextIntoString(){
 	//alert('Text saved!');
 }
 
-function loadText(){
+function loadSavedText(){
 	var entire_text_string = localStorage.getItem('saved_text');
-	document.body.innerHTML += entire_text_string
+	if (entire_text_string){
+		document.body.innerHTML += entire_text_string
+	}
 }
 
 
@@ -211,7 +226,6 @@ function loadDictionary(){
 
 //loads the dictionary as one continuous string to reduce memory use
 const wordDict = loadDictionary();
-//alert(wordDict);
 
 
 // Code that adds a delay to the selection detection to prevent multiple detections
@@ -226,25 +240,132 @@ function debounce(fn, delay) {
   };
 };
 
-// Listens for selections 
-document.addEventListener("selectionchange", debounce(function (event) {
+function getDefinition(){
+	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	//if selection is not blank
-	let selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
 	if (selection !== ''){
 		console.log("What I selected: "+ selection);
+        //If word is in dict
 		if (wordDict.includes(selection)){
 			//console.log('wordDict: ' +wordDict)
 			//console.log('selection: '+selection)
 			//alert('woo hoo!')
-			var def_word_regex = selection + "[^\n]+";
-			var def_word = wordDict.matchAll(def_word_regex);
+
+            //Find the word in its proper definition (ie not inside other words like "in" in "inside")
+			//https://regex101.com/ good website for regex
+			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
+			var def_word_re = wordDict.matchAll(re);
 			var all_def = '';
-			for (var def of def_word){
+			for (var def of def_word_re){
 				all_def += def + "\n ";
 			};
-			console.log("I am the definition: " + all_def.slice(0,-3))
-		}
+
+            //Makes sure that the definition is not blank
+            if (all_def != ""){
+				console.log("I am the definition: " + all_def.slice(0,-3))
+				return (all_def);
+			}
+        }
 	}
+}
+
+function displayDefinition(def){
+	//Unicode stuff
+	var markerTextChar = "\ufeff";
+    var markerTextCharEntity = "&#xfeff;";
+
+	//Assign markerId to the thing on the right and declare markerEl
+	//Make markerId unique, combining time and a random string 
+    var markerEl, markerId = "sel_" + new Date().getTime() + "_" + Math.random().toString().substr(2);
+
+    return function(win) {
+		//Asign win to window if win is falsy
+        win = win || window;
+		//Document of window
+        var doc = win.document;
+        var sel, range;
+
+		var selectionEl = doc.getElementById('selection_popup');
+
+        // Branch for IE <= 8 
+        if (doc.selection && doc.selection.createRange) {
+            // Clone the TextRange and collapse
+            range = doc.selection.createRange().duplicate();
+            range.collapse(false);
+
+            // Create the marker element containing a single invisible character by creating literal HTML and insert it
+            range.pasteHTML('<span id="' + markerId + '" style="position: relative;">' + markerTextCharEntity + '</span>');
+            markerEl = doc.getElementById(markerId);
+        } else if (win.getSelection) {
+			//For IE >= 9
+            sel = win.getSelection();
+            range = sel.getRangeAt(0).cloneRange();
+			//Collapse range to the end (shorten it)
+            range.collapse(false);
+
+            // Create the marker element containing a single invisible character using DOM methods and insert it
+            markerEl = doc.createElement("span");
+            markerEl.id = markerId;
+			//?
+            markerEl.appendChild( doc.createTextNode(markerTextChar) );
+			//Inserts a node at the start of the range
+            range.insertNode(markerEl);
+        }
+
+        if (markerEl) {
+            // Lazily create element to be placed next to the selection
+
+			// // If selectionEl is not defined yet
+			// //NOTE: just create selectionEl beforehand/in the html so that it would not get scrolled down all the time
+            // if (!selectionEl) {
+            //     selectionEl = doc.createElement("div");
+            //     selectionEl.style.border = "solid darkblue 1px";
+            //     selectionEl.style.backgroundColor = "lightgoldenrodyellow";
+            //     selectionEl.innerHTML = "&lt;- selection";
+            //     selectionEl.style.position = "absolute";
+
+            //     doc.body.appendChild(selectionEl);
+            // }
+
+     	 	// Find markerEl position http://www.quirksmode.org/js/findpos.html
+
+			// assign obj to marker element
+			var obj = markerEl;
+
+			var left = 0, top = 0;
+			do {
+				left += obj.offsetLeft;
+				top += obj.offsetTop;
+			} while (obj = obj.offsetParent);
+
+			//minor adjustments to the placement of the text
+			left += 15;
+			top += 35;
+
+			// Move the button into place.
+			// Substitute your jQuery stuff in here
+			selectionEl.style.display = 'block';
+			selectionEl.style.left = left + "px";
+			selectionEl.style.top = top + "px";
+
+			//Change the text to the definition
+			selectionEl.innerHTML = def;
+
+			markerEl.parentNode.removeChild(markerEl);
+			}
+    };
+}
+
+// Listens for selections 
+document.addEventListener("selectionchange", debounce(function (event) {
+	//Remove old definition
+	document.getElementById('selection_popup').style.display = 'none';
+
+	wordDefinition = getDefinition();
+	if (wordDefinition){
+		window.setTimeout(displayDefinition(wordDefinition), 1000)
+	}
+
 }, 250));
 
 

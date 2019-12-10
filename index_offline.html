@@ -389,6 +389,9 @@ function displayDefinition(def){
 
 // Listens for selections 
 document.addEventListener("selectionchange", debounce(function (event) {
+	//Remove old definition
+	document.getElementById('selection_popup').style.display = 'none';
+
 	wordDefinition = getDefinition();
 	if (wordDefinition){
 		window.setTimeout(displayDefinition(wordDefinition), 1000)
