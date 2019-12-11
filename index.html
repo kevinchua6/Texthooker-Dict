@@ -251,10 +251,11 @@ function getDefinition(wordDict){
 			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
 			var def_words_re = wordDict.match(re);
 			var all_def = '';
-			for (var def of def_words_re){
-				all_def += def + "\n ";
-			};
-
+			if (def_words_re) {
+				for (var def of def_words_re){
+					all_def += def + "\n ";
+				};
+			}	
             //Makes sure that the definition is not blank
             if (all_def != ""){
 				console.log("I am the definition: " + all_def.slice(0,-3))
