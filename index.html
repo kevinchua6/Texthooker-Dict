@@ -246,16 +246,12 @@ function getDefinition(wordDict){
 		console.log("What I selected: "+ selection);
         //If word is in dict
 		if (wordDict.includes(selection)){
-			//console.log('wordDict: ' +wordDict)
-			//console.log('selection: '+selection)
-			//alert('woo hoo!')
-
             //Find the word in its proper definition (ie not inside other words like "in" in "inside")
 			//https://regex101.com/ good website for regex
 			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
-			var def_word_re = wordDict.matchAll(re);
+			var def_words_re = wordDict.match(re);
 			var all_def = '';
-			for (var def of def_word_re){
+			for (var def of def_words_re){
 				all_def += def + "\n ";
 			};
 
@@ -459,8 +455,7 @@ $("#remove_button").click(function(){
 		var lastlen = last.length;
 		  
 		//Check what kind of button it is
-		if (remove_button_red){ //note also can use the color of the remove button?
-			//alert('Are you sure you want to delete?');
+		if (remove_button_red){ 
 			var lines_to_remove = Math.ceil(q/2);
 			for (var i=0; i < lines_to_remove; i++){
                 $('body').children('p:first').remove();

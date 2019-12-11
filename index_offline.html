@@ -15,43 +15,6 @@ body {
 	height: 50000px;
 }
 
-/* For loading screen */
-#dimScreen
-{
-    position:fixed;
-    padding:0;
-    margin:0;
-
-    top:0;
-    left:0;
-
-    width: 100%;
-    height: 100%;
-    background:rgba(255,255,255,0.5);
-}
-
-#loader {
-	position: absolute;
-	left: 50%;
-	top: 50%;
-	z-index: 1;
-	width: 150px;
-	height: 150px;
-	margin: -75px 0 0 -75px;
-	border: 16px solid #f3f3f3;
-	border-radius: 50%;
-	border-top: 16px solid #3498db;
-	width: 120px;
-	height: 120px;
-	animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-/* For loading screen */
-
 .container {
 	position:fixed;
 	top:3px;
@@ -229,22 +192,20 @@ function loadSavedText(){
 }
 
 
-//loads dictionary
-function loadDictionary(){
-	var req = new XMLHttpRequest();
-	req.open("GET", "dict.dat", false);
-	//req.open("GET", "data/dict.dat", false); //add this when everything is done
-	// Delete loading screen
-	document.getElementById("loader").style.display = "none";
-	document.getElementById("dimScreen").style.display = "none";
-	req.send();
-	console.log("dictionary: "+ req.responseText);
-	return req.responseText;
-}
+// //loads dictionary
+// function loadDictionary(){
+// 	var req = new XMLHttpRequest();
+// 	req.open("GET", "dict.dat", false);
+// 	//req.open("GET", "data/dict.dat", false); //add this when everything is done
+// 	req.send();
+// 	console.log("dictionary: "+ req.responseText);
+// 	return req.responseText;
+// }
 
-document.getElementById("loader").style.display = "none"; //remove
-document.getElementById("dimScreen").style.display = "none"; //remove
+// document.getElementById("loader").style.display = "none"; //remove
+// document.getElementById("dimScreen").style.display = "none"; //remove
 //loads the dictionary as one continuous string to reduce memory use
+
 const wordDict = `何気無く [なにげなく] /(adv) unintentionally/calmly/inadvertently/innocently/(P)/
 何点 [なんてん] /(exp) what score or grade?/
 何物 [なにもの] /(n) something/nothing (with neg. verb)/
@@ -293,16 +254,13 @@ function getDefinition(){
 		console.log("What I selected: "+ selection);
         //If word is in dict
 		if (wordDict.includes(selection)){
-			//console.log('wordDict: ' +wordDict)
-			//console.log('selection: '+selection)
-			//alert('woo hoo!')
 
             //Find the word in its proper definition (ie not inside other words like "in" in "inside")
 			//https://regex101.com/ good website for regex
 			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
-			var def_word_re = wordDict.matchAll(re);
+			var def_words_re = wordDict.match(re);
 			var all_def = '';
-			for (var def of def_word_re){
+			for (var def of def_words_re){
 				all_def += def + "\n ";
 			};
 
