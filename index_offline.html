@@ -205,7 +205,8 @@ $(document).ready(function(){
 
 	//Loads the old saved text
 	loadSavedText()
-
+	$("#alert-success").fadeIn();
+	window.setTimeout(function(){ $("#alert-success").fadeOut(); }, 3000);
 	//window.setTimeout($("#alert-success").fadeOut(), 5000);
 
 	

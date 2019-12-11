@@ -165,17 +165,13 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <script>
 
 $(document).ready(function(){
-	//Change the color of the text of the definition when it becomes light/dark mode
-	//when click/ touchscreen/highlights other stuff it removes the definition
-
-
 	//Loads the old saved text
 	loadSavedText()
 	//loads the dictionary as one continuous string to reduce memory use
 	loadDictionary(wordDict =>{
 		//Fades in the alert that the loading is successful
 		$("#alert-success").fadeIn();
-		window.setTimeout($("#alert-success").fadeOut(), 5000);
+		window.setTimeout(function(){ $("#alert-success").fadeOut(); }, 3000);
 		// Listens for selections 
 		document.addEventListener("selectionchange", debounce(function (event) {
 			
