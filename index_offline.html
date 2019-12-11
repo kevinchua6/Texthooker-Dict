@@ -131,6 +131,22 @@ body {
 	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+#alert-success {
+	padding: 0.75rem 1.25rem;
+	margin-bottom: 1rem;
+	border: 1px solid transparent;
+	border-radius: 0.25rem;
+	position: fixed;
+	color: #155724;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+	bottom: 10%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0.7;
+	display: none;
+}
+
 
 
 
@@ -179,16 +195,20 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 		<script type="text/javascript" src="resources/automatic_scrolling.js"></script>
 		<script type="text/javascript" src="resources/main.js"></script>
 		
+<div id= "alert-success">Dictionary loaded!</div>
+
 <script>
 
 $(document).ready(function(){
 	//Change the color of the text of the definition when it becomes light/dark mode
 	//when click/ touchscreen/highlights other stuff it removes the definition
 
-
 	//Loads the old saved text
 	loadSavedText()
 
+	//window.setTimeout($("#alert-success").fadeOut(), 5000);
+
+	
 function saveTextIntoString(){
 	//Saves the text
 	var entire_text = document.getElementsByTagName("p");
@@ -412,8 +432,6 @@ function scrollToNewestLine(){
         return scroll_position;
 };
 
-	// console.log(p.textContent);
-	//document.getElementById(hello).scrollIntoView();
 	
 	
 //The text inserter/scroller and the counter begin here.

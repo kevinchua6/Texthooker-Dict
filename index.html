@@ -94,6 +94,21 @@ body {
 	transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
+#alert-success {
+	padding: 0.75rem 1.25rem;
+	margin-bottom: 1rem;
+	border: 1px solid transparent;
+	border-radius: 0.25rem;
+	position: fixed;
+	color: #155724;
+	background-color: #d4edda;
+	border-color: #c3e6cb;
+	bottom: 10%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	opacity: 0.7;
+	display: none;
+}
 
 
 
@@ -145,6 +160,8 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 		<script type="text/javascript" src="resources/automatic_scrolling.js"></script>
 		<script type="text/javascript" src="resources/main.js"></script>
 		
+
+<div id= "alert-success">Dictionary loaded!</div>
 <script>
 
 $(document).ready(function(){
@@ -156,6 +173,9 @@ $(document).ready(function(){
 	loadSavedText()
 	//loads the dictionary as one continuous string to reduce memory use
 	loadDictionary(wordDict =>{
+		//Fades in the alert that the loading is successful
+		$("#alert-success").fadeIn();
+		window.setTimeout($("#alert-success").fadeOut(), 5000);
 		// Listens for selections 
 		document.addEventListener("selectionchange", debounce(function (event) {
 			
@@ -164,7 +184,7 @@ $(document).ready(function(){
 
 			wordDefinition = getDefinition(wordDict);
 			if (wordDefinition){
-				window.setTimeout(displayDefinition(wordDefinition), 1000)
+				window.setTimeout(displayDefinition(wordDefinition), 1000);
 			}
 
 		}, 250));
