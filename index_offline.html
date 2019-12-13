@@ -405,6 +405,7 @@ const config = { attributes: true, childList: true, subtree: true };
 // Callback function to execute when mutations are observed
 var timeBeforeSave;
 const callback_DOM = function(mutationsList, observer) {
+	var latest_scroll_position = scrollToNewestLine();
 	// Saves everytime a new node is inserted.
 	//saveTextIntoString();
 	//Cancel previous time if exists
@@ -444,7 +445,7 @@ const callback_DOM = function(mutationsList, observer) {
       //(That is, it won't run unless a new line was added.)
 	  //Like this it won't autoscroll down every time Rikai is used.
 	  
-      var latest_scroll_position = scrollToNewestLine();
+      
        
   }; //This is the end of the "if new line" statement.
 
@@ -502,8 +503,8 @@ $("#remove_button").click(function(){
                 $('body').children('p:first').remove();
                 
             }
-            window.scrollTo(0, latest_scroll_position);
-            alert('Cleared half of the lines');
+			// var latest_scroll_position = scrollToNewestLine()
+            // window.scrollTo(0, latest_scroll_position);
 		} 
 		else {
   		   	//Remove the last line.
