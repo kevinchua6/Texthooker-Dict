@@ -139,24 +139,24 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 <!-- <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div> -->
 <div class="container">
-	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
-	<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
+<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
+<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
 <!-- This is the div used for the "remove last line" button. -->
-	<button id="remove_button" title="Remove last line" >x</button>
+<button id="remove_button" title="Remove last line" >x</button>
 <!-- End button div. -->
 
 <!-- This is the div used for the counter. -->
-	<div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
+<div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
 <!-- End counter div. -->
 </div>
 <div id="dimScreen"></div>
 <div id="loader"></div>
 <!-- jQuery is needed for the page to run. You can change this to an offline version if you prefer. -->
-		<meta charset="utf-8">
-		<title>Texthooker</title>
-		<script type="text/javascript" src="resources/jquery.js"></script>
-		<script type="text/javascript" src="resources/automatic_scrolling.js"></script>
-		<script type="text/javascript" src="resources/main.js"></script>
+<meta charset="utf-8">
+<title>Texthooker</title>
+<script type="text/javascript" src="resources/jquery.js"></script>
+<script type="text/javascript" src="resources/automatic_scrolling.js"></script>
+<script type="text/javascript" src="resources/main.js"></script>
 		
 <div id= "alert-success">Dictionary loaded!</div>
 
@@ -508,7 +508,10 @@ $("#toggle-light").click(function(){
 	}
 });
 
-
+$(".toggle_scrolling_button").click(function() {
+	scroll_button = !scroll_button;
+	console.log("toggle");
+})
 
 });
 </script>
