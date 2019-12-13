@@ -407,48 +407,18 @@ var timeBeforeSave;
 const callback_DOM = function(mutationsList, observer) {
 	var latest_scroll_position = scrollToNewestLine();
 	// Saves everytime a new node is inserted.
-	//saveTextIntoString();
+	
 	//Cancel previous time if exists
-	
 	clearTimeout(timeBeforeSave)
-	
-	
+
 	//Wait 20s before it saves
 	timeBeforeSave = setTimeout(saveTextIntoString, 20000)
 
-	//Counter begins here. Get the current number of lines first.
-	var lines = document.getElementsByTagName('p').length;
-  
-  //Second, confirm whether the node insertion was a new line.
-  //(Rikai also inserts and removes a node (a div).)
-  var isnew = lines - oldlines;
-  if ( isnew > 0 ){
-  	  //If it is a new line, do a character count of the line and add it to the running tally.
-	  var i=lines-1
-  	  var newline = document.getElementsByTagName('p')[i].innerHTML;
-  	  var linechars = newline.length;
-  	  newchars = chars + linechars;
-  	  
-	  //Make the numbers look nice.
-	  var charsdisp = newchars.toLocaleString();
-	  var linesdisp = lines.toLocaleString();
-	  
-	  //Print the new counts into the counter.
-	  jQuery('#counter').text("Chars: "+charsdisp+' / Lines: '+linesdisp);
-	  
-	  //Get ready for the next line.
-	  oldlines = lines;
-	  chars = newchars;
-	  
-      //The counter ends here and the text-scroller is below.
-      //I've included it in the "if new line" statement.
-      //(That is, it won't run unless a new line was added.)
-	  //Like this it won't autoscroll down every time Rikai is used.
-	  
-      
-       
-  }; //This is the end of the "if new line" statement.
+	var lines = $("p").length;
+	var chars = $.trim($("p").text()).length;
 
+	//Print the new counts into the counter.
+	jQuery('#counter').text("Chars: " + chars + ' / Lines: ' + lines);
 };
 // Create an observer instance linked to the callback function
 const observer = new MutationObserver(callback_DOM);
