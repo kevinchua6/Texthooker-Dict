@@ -137,7 +137,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <div id="selection_popup">&lt;- selection</div>
 <link rel="stylesheet" type="text/css" href="Texthookertest_files/popup.css" id="rikaichamp-css"></head>
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
-<div>何気無く死んでいた。俺はそういう人間なんだぜ。</div>
+<!-- <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div> -->
 <div class="container">
 	<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
 	<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
@@ -247,31 +247,31 @@ function debounce(fn, delay) {
   };
 };
 
-function getDefinition(){
-	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
-	//if selection is not blank
-	if (selection !== ''){
-		console.log("What I selected: "+ selection);
-        //If word is in dict
-		if (wordDict.includes(selection)){
+// function getDefinition(){
+// 	var selection = (document.getSelection ? document.getSelection().toString() :  document.selection.createRange().toString()).trim();
+// 	//if selection is not blank
+// 	if (selection !== ''){
+// 		console.log("What I selected: "+ selection);
+//         //If word is in dict
+// 		if (wordDict.includes(selection)){
 
-            //Find the word in its proper definition (ie not inside other words like "in" in "inside")
-			//https://regex101.com/ good website for regex
-			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
-			var def_words_re = wordDict.match(re);
-			var all_def = '';
-			for (var def of def_words_re){
-				all_def += def + "\n ";
-			};
+//             //Find the word in its proper definition (ie not inside other words like "in" in "inside")
+// 			//https://regex101.com/ good website for regex
+// 			var re = new RegExp ("^"+selection+"[^\n]+", 'mg');
+// 			var def_words_re = wordDict.match(re);
+// 			var all_def = '';
+// 			for (var def of def_words_re){
+// 				all_def += def + "\n ";
+// 			};
 
-            //Makes sure that the definition is not blank
-            if (all_def != ""){
-				console.log("I am the definition: " + all_def.slice(0,-3))
-				return (all_def);
-			}
-        }
-	}
-}
+//             //Makes sure that the definition is not blank
+//             if (all_def != ""){
+// 				console.log("I am the definition: " + all_def.slice(0,-3))
+// 				return (all_def);
+// 			}
+//         }
+// 	}
+// }
 
 
 
@@ -366,17 +366,17 @@ function displayDefinition(def){
 
 
 
-// Listens for selections 
-document.addEventListener("selectionchange", debounce(function (event) {
-	//Remove old definition
-	document.getElementById('selection_popup').style.display = 'none';
+// // Listens for selections 
+// document.addEventListener("selectionchange", debounce(function (event) {
+// 	//Remove old definition
+// 	document.getElementById('selection_popup').style.display = 'none';
 
-	wordDefinition = getDefinition();
-	if (wordDefinition){
-		window.setTimeout(displayDefinition(wordDefinition), 1000)
-	}
+// 	wordDefinition = getDefinition();
+// 	if (wordDefinition){
+// 		window.setTimeout(displayDefinition(wordDefinition), 1000)
+// 	}
 
-}, 250));
+// }, 250));
 
 
 function scrollToNewestLine(){
@@ -391,13 +391,18 @@ function scrollToNewestLine(){
         return scroll_position;
 };
 
-	
+function updateCounter(){
+	var lines = $("p").length;
+	var chars = $.trim($("p").text()).length;
+	//Print the new counts into the counter.
+	jQuery('#counter').text("Chars: " + chars + ' / Lines: ' + lines);
+	return (lines)
+}
 	
 //The text inserter/scroller and the counter begin here.
 
 //These are needed later.
 oldlines = 0;
-chars = 0;
 
 //Replacement for the event listener for DOM nodes
 // Options for the observer (which mutations to observe)
@@ -417,36 +422,13 @@ const callback_DOM = function(mutationsList, observer) {
 	timeBeforeSave = setTimeout(saveTextIntoString, 20000)
 
 	//Counter begins here. Get the current number of lines first.
-	var lines = document.getElementsByTagName('p').length;
+	var lines = $("p").length;
   
-  //Second, confirm whether the node insertion was a new line.
+  //Second, confirm whether the node insertion was a new line to ensure that it does not go into a loop
   //(Rikai also inserts and removes a node (a div).)
   var isnew = lines - oldlines;
   if ( isnew > 0 ){
-  	  //If it is a new line, do a character count of the line and add it to the running tally.
-	  var i=lines-1
-  	  var newline = document.getElementsByTagName('p')[i].innerHTML;
-  	  var linechars = newline.length;
-  	  newchars = chars + linechars;
-  	  
-	  //Make the numbers look nice.
-	  var charsdisp = newchars.toLocaleString();
-	  var linesdisp = lines.toLocaleString();
-	  
-	  //Print the new counts into the counter.
-	  jQuery('#counter').text("Chars: "+charsdisp+' / Lines: '+linesdisp);
-	  
-	  //Get ready for the next line.
-	  oldlines = lines;
-	  chars = newchars;
-	  
-      //The counter ends here and the text-scroller is below.
-      //I've included it in the "if new line" statement.
-      //(That is, it won't run unless a new line was added.)
-	  //Like this it won't autoscroll down every time Rikai is used.
-	  
-      
-       
+	oldlines = updateCounter()
   }; //This is the end of the "if new line" statement.
 
 };
@@ -488,39 +470,23 @@ $("#remove_button")[0].addEventListener('contextmenu', function(ev) {
 
 $("#remove_button").click(function(){
 	//Check whether there are any lines.
-	var remove_lines = document.getElementsByTagName('p').length;
-	if ( remove_lines > 0 ){
-		//If there are, find the last line and do a character count.
-		var q = remove_lines - 1;
-		var last = document.getElementsByTagName('p')[q].innerHTML;
-		var lastlen = last.length;
-		  
+	var lines = $("p").length;
+	if ( lines > 0 ){
 		//Check what kind of button it is
 		if (remove_button_red){ //note also can use the color of the remove button?
 			//alert('Are you sure you want to delete?');
-			var lines_to_remove = Math.ceil(q/2);
+			var lines_to_remove = Math.ceil(lines/2);
 			for (var i=0; i < lines_to_remove; i++){
                 $('body').children('p:first').remove();
                 
-            }
-			// var latest_scroll_position = scrollToNewestLine()
-            // window.scrollTo(0, latest_scroll_position);
+			}
 		} 
 		else {
   		   	//Remove the last line.
 			$('body').children('p:last').remove();
 		}
 		  	    
-  	    //Update the counter.
-		var newch = chars - lastlen;
-   	    var newchdisp = newch.toLocaleString();
- 		var newl = oldlines - 1;
- 		var newldisp = newl.toLocaleString();
-		jQuery('#counter').text(newchdisp+' / '+newldisp);
-		
-		//Prepare for next line.
-		chars = newch;
-		oldlines = newl;
+		oldlines = updateCounter()
 	};
 });
 
