@@ -410,7 +410,6 @@ const config = { attributes: true, childList: true, subtree: true };
 // Callback function to execute when mutations are observed
 var timeBeforeSave;
 const callback_DOM = function(mutationsList, observer) {
-	var latest_scroll_position = scrollToNewestLine();
 	// Saves everytime a new node is inserted.
 	//saveTextIntoString();
 	//Cancel previous time if exists
@@ -429,6 +428,7 @@ const callback_DOM = function(mutationsList, observer) {
   var isnew = lines - oldlines;
   if ( isnew > 0 ){
 	oldlines = updateCounter()
+	var latest_scroll_position = scrollToNewestLine();
   }; //This is the end of the "if new line" statement.
 
 };
