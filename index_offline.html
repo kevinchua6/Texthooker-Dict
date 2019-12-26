@@ -51,6 +51,17 @@ body {
 	cursor:hand;
 }
 
+#right_resize {
+	/* change this color when the button is clicked also */
+	background-color: grey;
+	position: fixed;
+	top: 0;
+	right: 96px;
+	width: 4px;
+	height: 100%;
+	cursor: w-resize;
+}
+
 #selection_popup {
 	color: black;
 	border: solid darkblue 1px;
@@ -134,6 +145,7 @@ For various other free Japanese fonts, visit http://www.freejapanesefont.com/
 For more font attribute information visit http://www.w3schools.com/css/css_font.asp
 
 ------------------------>
+<div id="right_resize"></div>
 <div id="selection_popup">&lt;- selection</div>
 <link rel="stylesheet" type="text/css" href="Texthookertest_files/popup.css" id="rikaichamp-css"></head>
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
@@ -151,6 +163,9 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 </div>
 <div id="dimScreen"></div>
 <div id="loader"></div>
+
+
+
 <!-- jQuery is needed for the page to run. You can change this to an offline version if you prefer. -->
 <meta charset="utf-8">
 <title>Texthooker</title>
@@ -230,7 +245,7 @@ const wordDict = `何気無く [なにげなく] /(adv) unintentionally/calmly/i
 γ崩壊 [ガンマほうかい] /(n) gamma decay/
 γ線 [ガンマせん] /(n,adj-no) gamma rays/
 ε [イプシロン] /(n) epsilon/`
-console.log("dictionary: "+ wordDict);
+//console.log("dictionary: "+ wordDict);
 
 //alert(wordDict);
 
@@ -445,6 +460,35 @@ observer.observe(targetNode, config);
 
 
 //Beginning of "remove last line" script.
+
+
+//Note, add saving to the position of the resize (the resize_right offset and put it here)
+//Changes the margins of the documents to be equal to the amount resized
+document.body.style.marginRight = $(window).width() - $('#right_resize').offset().left + "px";
+
+var resizeRight = document.getElementById("right_resize");
+var posRight;
+
+function resizeRightFunc(e){
+	if ($(window).width() - e.x > 0 ){
+		resizeRight.style.right = $(window).width() - e.x + "px";
+		posRight = e.x;
+		//Set the document body margin to the width - mouse x coordinates
+		document.body.style.marginRight = $(window).width() - e.x + "px";
+	}
+}
+
+resizeRight.addEventListener("mousedown", function(e){
+	e.preventDefault();
+	posRight = e.x;
+	document.addEventListener("mousemove", resizeRightFunc, false);
+}, false);
+
+document.addEventListener("mouseup", function(){
+	document.removeEventListener("mousemove", resizeRightFunc, false);
+}, false);
+
+
 
 //Listen for click.
 //var to determine if remove_button will be red
