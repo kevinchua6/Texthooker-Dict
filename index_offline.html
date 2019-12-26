@@ -477,13 +477,12 @@ observer.observe(targetNode, config);
 //Note, add saving to the position of the resize (the resize_right offset and put it here)
 //Changes the margins of the documents to be equal to the amount resized
 document.body.style.marginRight = $(window).width() - $('#right_resize').offset().left + "px";
-document.body.style.marginLeft = $('#left_resize').offset().left + "px";
+document.body.style.marginLeft = $('#left_resize').offset().left + 5 + "px";
 
 var resizeRight = document.getElementById("right_resize");
 var posRight;
 
 function resizeRightFunc(e){
-	//Note, add the if statement for < (pos of resizeLeft)
 	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
 		resizeRight.style.right = $(window).width() - e.x + "px";
 		posRight = e.x;
@@ -507,12 +506,11 @@ var resizeLeft = document.getElementById("left_resize");
 var posLeft;
 
 function resizeLeftFunc(e){
-	//Note, add the if statement for < (pos of resizeLeft)
 	if ($(window).width() - e.x > 0 && e.x < $('#right_resize').offset().left){
 		resizeLeft.style.left = e.x + "px";
 		posLeft = e.x;
 		//Set the document body margin to the width - mouse x coordinates
-		document.body.style.marginLeft = e.x + "px";
+		document.body.style.marginLeft = e.x + 5 + "px";
 	}
 }
 
