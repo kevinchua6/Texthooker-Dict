@@ -57,7 +57,18 @@ body {
 	position: fixed;
 	top: 0;
 	right: 96px;
-	width: 4px;
+	width: 3px;
+	height: 100%;
+	cursor: w-resize;
+}
+
+#left_resize {
+	/* change this color when the button is clicked also */
+	background-color: grey;
+	position: fixed;
+	top: 0;
+	left: 2px;
+	width: 3px;
 	height: 100%;
 	cursor: w-resize;
 }
@@ -146,6 +157,7 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 
 ------------------------>
 <div id="right_resize"></div>
+<div id="left_resize"></div>
 <div id="selection_popup">&lt;- selection</div>
 <link rel="stylesheet" type="text/css" href="Texthookertest_files/popup.css" id="rikaichamp-css"></head>
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
@@ -465,12 +477,14 @@ observer.observe(targetNode, config);
 //Note, add saving to the position of the resize (the resize_right offset and put it here)
 //Changes the margins of the documents to be equal to the amount resized
 document.body.style.marginRight = $(window).width() - $('#right_resize').offset().left + "px";
+document.body.style.marginLeft = $('#left_resize').offset().left + "px";
 
 var resizeRight = document.getElementById("right_resize");
 var posRight;
 
 function resizeRightFunc(e){
-	if ($(window).width() - e.x > 0 ){
+	//Note, add the if statement for < (pos of resizeLeft)
+	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
 		resizeRight.style.right = $(window).width() - e.x + "px";
 		posRight = e.x;
 		//Set the document body margin to the width - mouse x coordinates
@@ -489,6 +503,28 @@ document.addEventListener("mouseup", function(){
 }, false);
 
 
+var resizeLeft = document.getElementById("left_resize");
+var posLeft;
+
+function resizeLeftFunc(e){
+	//Note, add the if statement for < (pos of resizeLeft)
+	if ($(window).width() - e.x > 0 && e.x < $('#right_resize').offset().left){
+		resizeLeft.style.left = e.x + "px";
+		posLeft = e.x;
+		//Set the document body margin to the width - mouse x coordinates
+		document.body.style.marginLeft = e.x + "px";
+	}
+}
+
+resizeLeft.addEventListener("mousedown", function(e){
+	e.preventDefault();
+	posLeft = e.x;
+	document.addEventListener("mousemove", resizeLeftFunc, false);
+}, false);
+
+document.addEventListener("mouseup", function(){
+	document.removeEventListener("mousemove", resizeLeftFunc, false);
+}, false);
 
 //Listen for click.
 //var to determine if remove_button will be red
