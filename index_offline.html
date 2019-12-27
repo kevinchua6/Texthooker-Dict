@@ -60,6 +60,7 @@ body {
 	width: 3px;
 	height: 100%;
 	cursor: w-resize;
+	opacity: 60%;
 }
 
 #left_resize {
@@ -71,6 +72,7 @@ body {
 	width: 3px;
 	height: 100%;
 	cursor: w-resize;
+	opacity: 60%;
 }
 
 #selection_popup {
@@ -163,10 +165,10 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 <!-- <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div> -->
 <div class="container">
-<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode">L</button>
-<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling">O</button>
+<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode (L)">L</button>
+<button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling (O)">O</button>
 <!-- This is the div used for the "remove last line" button. -->
-<button id="remove_button" title="Remove last line" >x</button>
+<button id="remove_button" title="Remove last line (X)" >x</button>
 <!-- End button div. -->
 
 <!-- This is the div used for the counter. -->
@@ -523,6 +525,39 @@ resizeLeft.addEventListener("mousedown", function(e){
 document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeLeftFunc, false);
 }, false);
+
+var margins = true;
+document.addEventListener("keydown", function(e){
+	//Handles all the keypresses for all the hotkeys
+	e.preventDefault();
+	const key = e.key;
+	switch (key){
+		case "m":
+			//Makes margins appear/disappear
+			margins = !margins;
+			if (margins){
+				resizeRight.style.display = 'inline';
+				resizeLeft.style.display = 'inline';
+			}
+			else {
+				resizeRight.style.display = 'none';
+				resizeLeft.style.display = 'none';
+			}
+		case "x":
+			//Deletes line
+			$("#remove_button").click();
+		case "o":
+			//Toggle scrolling
+			$(".toggle_scrolling_button").click();
+		case "l":
+			//Toggle lighting
+			$("#toggle-light").click();
+
+	}
+
+})
+
+
 
 //Listen for click.
 //var to determine if remove_button will be red
