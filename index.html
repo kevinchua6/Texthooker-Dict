@@ -190,7 +190,8 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 
 $(document).ready(function(){
 	//Loads the old saved text
-	loadSavedText()
+	loadSavedText();
+	loadMarginPosition();
 	//loads the dictionary as one continuous string to reduce memory use
 	loadDictionary(wordDict =>{
 		//Fades in the alert that the loading is successful
@@ -234,7 +235,6 @@ function loadSavedText(){
 		document.body.innerHTML += entire_text_string
 	}
 }
-
 
 //loads dictionary
 function loadDictionary(callback){
@@ -436,11 +436,11 @@ observer.observe(targetNode, config);
 
 //Note, add saving to the position of the resize (the resize_right offset and put it here)
 //Changes the margins of the documents to be equal to the amount resized
-document.body.style.marginRight = $(window).width() - $('#right_resize').offset().left + "px";
-document.body.style.marginLeft = $('#left_resize').offset().left + 5 + "px";
+
 
 var resizeRight = document.getElementById("right_resize");
 var posRight;
+var timeBeforeSavePos;
 
 function resizeRightFunc(e){
 	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
@@ -448,6 +448,14 @@ function resizeRightFunc(e){
 		posRight = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginRight = $(window).width() - e.x + "px";
+
+		clearTimeout(timeBeforeSavePos);
+		//Wait 20s before it saves
+		timeBeforeSavePos = setTimeout(function(){
+			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
+			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
+			console.log("Set right margin");
+		}, 10000)
 	}
 }
 
@@ -461,7 +469,7 @@ document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeRightFunc, false);
 }, false);
 
-var margins = true;
+var marginsBool = true;
 document.addEventListener("keydown", function(e){
 	//Handles all the keypresses for all the hotkeys
 	e.preventDefault();
@@ -469,8 +477,8 @@ document.addEventListener("keydown", function(e){
 	switch (key){
 		case "m":
 			//Makes margins appear/disappear
-			margins = !margins;
-			if (margins){
+			marginsBool = !marginsBool;
+			if (marginsBool){
 				resizeRight.style.display = 'inline';
 				resizeLeft.style.display = 'inline';
 			}
@@ -478,15 +486,19 @@ document.addEventListener("keydown", function(e){
 				resizeRight.style.display = 'none';
 				resizeLeft.style.display = 'none';
 			}
+			break;
 		case "x":
 			//Deletes line
 			$("#remove_button").click();
+			break;
 		case "o":
 			//Toggle scrolling
 			$(".toggle_scrolling_button").click();
+			break;
 		case "l":
 			//Toggle lighting
 			$("#toggle-light").click();
+			break;
 
 	}
 
@@ -501,6 +513,14 @@ function resizeLeftFunc(e){
 		posLeft = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginLeft = e.x + 5 + "px";
+
+		clearTimeout(timeBeforeSavePos);
+		//Wait 20s before it saves
+		timeBeforeSavePos = setTimeout(function(){
+			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
+			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
+			console.log("Set left margin");
+		}, 10000)
 	}
 }
 
@@ -513,6 +533,26 @@ resizeLeft.addEventListener("mousedown", function(e){
 document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeLeftFunc, false);
 }, false);
+
+
+function loadMarginPosition(){
+	var resizeLeft = document.getElementById("left_resize");
+	var resizeRight = document.getElementById("right_resize");
+
+	var leftMarginPos = localStorage.getItem('saved_left_pos');
+	var rightMarginPos = localStorage.getItem('saved_right_pos');
+	if (leftMarginPos && rightMarginPos) {
+		document.body.style.marginRight = rightMarginPos;
+		document.body.style.marginLeft = leftMarginPos;
+
+		//remove px, convert to int
+		var rightMarginPosInt = parseInt(rightMarginPos.substring(0,rightMarginPos.length-2));
+		var leftMarginPosInt = parseInt(leftMarginPos.substring(0,leftMarginPos.length-2));
+
+		resizeRight.style.right = $(window).width() - rightMarginPosInt + "px";
+		resizeLeft.style.left = leftMarginPosInt - 5 + "px";
+	}
+}
 
 //Listen for click.
 //var to determine if remove_button will be red
@@ -576,7 +616,7 @@ $("#toggle-light").click(function(){
 	}
 });
 
-$(".toggle_scrolling_button").click(function(){
+$(".toggle_scrolling_button").click(function() {
 	scroll_button = !scroll_button;
 	console.log("toggle");
 })

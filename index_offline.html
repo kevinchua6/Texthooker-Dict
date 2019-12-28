@@ -196,7 +196,8 @@ $(document).ready(function(){
 	//when click/ touchscreen/highlights other stuff it removes the definition
 
 	//Loads the old saved text
-	loadSavedText()
+	loadSavedText();
+	loadMarginPosition();
 	$("#alert-success").fadeIn();
 	window.setTimeout(function(){ $("#alert-success").fadeOut(); }, 3000);
 	//window.setTimeout($("#alert-success").fadeOut(), 5000);
@@ -483,6 +484,7 @@ document.body.style.marginLeft = $('#left_resize').offset().left + 5 + "px";
 
 var resizeRight = document.getElementById("right_resize");
 var posRight;
+var timeBeforeSavePos;
 
 function resizeRightFunc(e){
 	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
@@ -490,6 +492,14 @@ function resizeRightFunc(e){
 		posRight = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginRight = $(window).width() - e.x + "px";
+		
+		clearTimeout(timeBeforeSavePos);
+		//Wait 20s before it saves
+		timeBeforeSavePos = setTimeout(function(){
+			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
+			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
+			console.log("Set right margin");
+		}, 10000)
 	}
 }
 
@@ -503,6 +513,40 @@ document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeRightFunc, false);
 }, false);
 
+var marginsBool = true;
+document.addEventListener("keydown", function(e){
+	//Handles all the keypresses for all the hotkeys
+	e.preventDefault();
+	const key = e.key;
+	switch (key){
+		case "m":
+			//Makes margins appear/disappear
+			marginsBool = !marginsBool;
+			if (marginsBool){
+				resizeRight.style.display = 'inline';
+				resizeLeft.style.display = 'inline';
+			}
+			else {
+				resizeRight.style.display = 'none';
+				resizeLeft.style.display = 'none';
+			}
+			break;
+		case "x":
+			//Deletes line
+			$("#remove_button").click();
+			break;
+		case "o":
+			//Toggle scrolling
+			$(".toggle_scrolling_button").click();
+			break;
+		case "l":
+			//Toggle lighting
+			$("#toggle-light").click();
+			break;
+
+	}
+
+})
 
 var resizeLeft = document.getElementById("left_resize");
 var posLeft;
@@ -513,6 +557,14 @@ function resizeLeftFunc(e){
 		posLeft = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginLeft = e.x + 5 + "px";
+
+		clearTimeout(timeBeforeSavePos);
+		//Wait 20s before it saves
+		timeBeforeSavePos = setTimeout(function(){
+			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
+			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
+			console.log("Set left margin");
+		}, 10000)
 	}
 }
 
@@ -526,38 +578,25 @@ document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeLeftFunc, false);
 }, false);
 
-var margins = true;
-document.addEventListener("keydown", function(e){
-	//Handles all the keypresses for all the hotkeys
-	e.preventDefault();
-	const key = e.key;
-	switch (key){
-		case "m":
-			//Makes margins appear/disappear
-			margins = !margins;
-			if (margins){
-				resizeRight.style.display = 'inline';
-				resizeLeft.style.display = 'inline';
-			}
-			else {
-				resizeRight.style.display = 'none';
-				resizeLeft.style.display = 'none';
-			}
-		case "x":
-			//Deletes line
-			$("#remove_button").click();
-		case "o":
-			//Toggle scrolling
-			$(".toggle_scrolling_button").click();
-		case "l":
-			//Toggle lighting
-			$("#toggle-light").click();
 
+function loadMarginPosition(){
+	var resizeLeft = document.getElementById("left_resize");
+	var resizeRight = document.getElementById("right_resize");
+
+	var leftMarginPos = localStorage.getItem('saved_left_pos');
+	var rightMarginPos = localStorage.getItem('saved_right_pos');
+	if (leftMarginPos && rightMarginPos) {
+		document.body.style.marginRight = rightMarginPos;
+		document.body.style.marginLeft = leftMarginPos;
+
+		//remove px, convert to int
+		var rightMarginPosInt = parseInt(rightMarginPos.substring(0,rightMarginPos.length-2));
+		var leftMarginPosInt = parseInt(leftMarginPos.substring(0,leftMarginPos.length-2));
+
+		resizeRight.style.right = $(window).width() - rightMarginPosInt + "px";
+		resizeLeft.style.left = leftMarginPosInt - 5 + "px";
 	}
-
-})
-
-
+}
 
 //Listen for click.
 //var to determine if remove_button will be red
