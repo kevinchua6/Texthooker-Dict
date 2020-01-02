@@ -61,6 +61,7 @@ body {
 	height: 100%;
 	cursor: w-resize;
 	opacity: 60%;
+	visibility:hidden;
 }
 #left_resize {
 	/* change this color when the button is clicked also */
@@ -72,6 +73,7 @@ body {
 	height: 100%;
 	cursor: w-resize;
 	opacity: 60%;
+	visibility:hidden;
 }
 #selection_popup {
 	color: black;
@@ -434,41 +436,6 @@ observer.observe(targetNode, config);
 //Beginning of "remove last line" script.
 
 
-//Note, add saving to the position of the resize (the resize_right offset and put it here)
-//Changes the margins of the documents to be equal to the amount resized
-
-
-var resizeRight = document.getElementById("right_resize");
-var posRight;
-var timeBeforeSavePos;
-
-function resizeRightFunc(e){
-	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
-		resizeRight.style.right = $(window).width() - e.x + "px";
-		posRight = e.x;
-		//Set the document body margin to the width - mouse x coordinates
-		document.body.style.marginRight = $(window).width() - e.x + "px";
-
-		clearTimeout(timeBeforeSavePos);
-		//Wait 20s before it saves
-		timeBeforeSavePos = setTimeout(function(){
-			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
-			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
-			console.log("Set right margin");
-		}, 10000)
-	}
-}
-
-resizeRight.addEventListener("mousedown", function(e){
-	e.preventDefault();
-	posRight = e.x;
-	document.addEventListener("mousemove", resizeRightFunc, false);
-}, false);
-
-document.addEventListener("mouseup", function(){
-	document.removeEventListener("mousemove", resizeRightFunc, false);
-}, false);
-
 var marginsBool = true;
 document.addEventListener("keydown", function(e){
 	//Handles all the keypresses for all the hotkeys
@@ -504,6 +471,41 @@ document.addEventListener("keydown", function(e){
 
 })
 
+//Note, add saving to the position of the resize (the resize_right offset and put it here)
+//Changes the margins of the documents to be equal to the amount resized
+
+
+var resizeRight = document.getElementById("right_resize");
+var posRight;
+var timeBeforeSavePos;
+
+function resizeRightFunc(e){
+	if ($(window).width() - e.x > 0 && e.x > $('#left_resize').offset().left){
+		resizeRight.style.right = $(window).width() - e.x + "px";
+		posRight = e.x;
+		//Set the document body margin to the width - mouse x coordinates
+		document.body.style.marginRight = $(window).width() - e.x + "px";
+
+		clearTimeout(timeBeforeSavePos);
+		//Wait 20s before it saves
+		timeBeforeSavePos = setTimeout(function(){
+			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
+			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
+			console.log("Set right margin");
+		}, 7000)
+	}
+}
+
+resizeRight.addEventListener("mousedown", function(e){
+	e.preventDefault();
+	posRight = e.x;
+	document.addEventListener("mousemove", resizeRightFunc, false);
+}, false);
+
+document.addEventListener("mouseup", function(){
+	document.removeEventListener("mousemove", resizeRightFunc, false);
+}, false);
+
 var resizeLeft = document.getElementById("left_resize");
 var posLeft;
 
@@ -520,7 +522,7 @@ function resizeLeftFunc(e){
 			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
 			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
 			console.log("Set left margin");
-		}, 10000)
+		}, 7000)
 	}
 }
 
@@ -541,6 +543,8 @@ function loadMarginPosition(){
 
 	var leftMarginPos = localStorage.getItem('saved_left_pos');
 	var rightMarginPos = localStorage.getItem('saved_right_pos');
+	resizeRight.style.visibility = 'visible';
+	resizeLeft.style.visibility = 'visible';
 	if (leftMarginPos && rightMarginPos) {
 		document.body.style.marginRight = rightMarginPos;
 		document.body.style.marginLeft = leftMarginPos;
@@ -549,7 +553,7 @@ function loadMarginPosition(){
 		var rightMarginPosInt = parseInt(rightMarginPos.substring(0,rightMarginPos.length-2));
 		var leftMarginPosInt = parseInt(leftMarginPos.substring(0,leftMarginPos.length-2));
 
-		resizeRight.style.right = $(window).width() - rightMarginPosInt + "px";
+		resizeRight.style.right = rightMarginPosInt + "px";
 		resizeLeft.style.left = leftMarginPosInt - 5 + "px";
 	}
 }

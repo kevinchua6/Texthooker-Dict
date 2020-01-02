@@ -61,6 +61,7 @@ body {
 	height: 100%;
 	cursor: w-resize;
 	opacity: 60%;
+	visibility:hidden;
 }
 
 #left_resize {
@@ -73,6 +74,7 @@ body {
 	height: 100%;
 	cursor: w-resize;
 	opacity: 60%;
+	visibility:hidden;
 }
 
 #selection_popup {
@@ -476,6 +478,40 @@ observer.observe(targetNode, config);
 
 //Beginning of "remove last line" script.
 
+var marginsBool = true;
+document.addEventListener("keydown", function(e){
+	//Handles all the keypresses for all the hotkeys
+	e.preventDefault();
+	const key = e.key;
+	switch (key){
+		case "m":
+			//Makes margins appear/disappear
+			marginsBool = !marginsBool;
+			if (marginsBool){
+				resizeRight.style.visibility = 'visible';
+				resizeLeft.style.visibility = 'visible';
+			}
+			else {
+				resizeRight.style.visibility = 'hidden';
+				resizeLeft.style.visibility = 'hidden';
+			}
+			break;
+		case "x":
+			//Deletes line
+			$("#remove_button").click();
+			break;
+		case "o":
+			//Toggle scrolling
+			$(".toggle_scrolling_button").click();
+			break;
+		case "l":
+			//Toggle lighting
+			$("#toggle-light").click();
+			break;
+
+	}
+
+})
 
 //Note, add saving to the position of the resize (the resize_right offset and put it here)
 //Changes the margins of the documents to be equal to the amount resized
@@ -498,8 +534,8 @@ function resizeRightFunc(e){
 		timeBeforeSavePos = setTimeout(function(){
 			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
 			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
-			console.log("Set right margin");
-		}, 10000)
+			console.log("Saved right margin");
+		}, 7000)
 	}
 }
 
@@ -512,41 +548,6 @@ resizeRight.addEventListener("mousedown", function(e){
 document.addEventListener("mouseup", function(){
 	document.removeEventListener("mousemove", resizeRightFunc, false);
 }, false);
-
-var marginsBool = true;
-document.addEventListener("keydown", function(e){
-	//Handles all the keypresses for all the hotkeys
-	e.preventDefault();
-	const key = e.key;
-	switch (key){
-		case "m":
-			//Makes margins appear/disappear
-			marginsBool = !marginsBool;
-			if (marginsBool){
-				resizeRight.style.display = 'inline';
-				resizeLeft.style.display = 'inline';
-			}
-			else {
-				resizeRight.style.display = 'none';
-				resizeLeft.style.display = 'none';
-			}
-			break;
-		case "x":
-			//Deletes line
-			$("#remove_button").click();
-			break;
-		case "o":
-			//Toggle scrolling
-			$(".toggle_scrolling_button").click();
-			break;
-		case "l":
-			//Toggle lighting
-			$("#toggle-light").click();
-			break;
-
-	}
-
-})
 
 var resizeLeft = document.getElementById("left_resize");
 var posLeft;
@@ -564,7 +565,7 @@ function resizeLeftFunc(e){
 			localStorage.setItem('saved_left_pos', document.body.style.marginLeft);
 			localStorage.setItem('saved_right_pos', document.body.style.marginRight);
 			console.log("Set left margin");
-		}, 10000)
+		}, 7000) 
 	}
 }
 
@@ -585,6 +586,8 @@ function loadMarginPosition(){
 
 	var leftMarginPos = localStorage.getItem('saved_left_pos');
 	var rightMarginPos = localStorage.getItem('saved_right_pos');
+	resizeRight.style.visibility = 'visible';
+	resizeLeft.style.visibility = 'visible';
 	if (leftMarginPos && rightMarginPos) {
 		document.body.style.marginRight = rightMarginPos;
 		document.body.style.marginLeft = leftMarginPos;
@@ -593,7 +596,7 @@ function loadMarginPosition(){
 		var rightMarginPosInt = parseInt(rightMarginPos.substring(0,rightMarginPos.length-2));
 		var leftMarginPosInt = parseInt(leftMarginPos.substring(0,leftMarginPos.length-2));
 
-		resizeRight.style.right = $(window).width() - rightMarginPosInt + "px";
+		resizeRight.style.right = rightMarginPosInt + "px";
 		resizeLeft.style.left = leftMarginPosInt - 5 + "px";
 	}
 }
