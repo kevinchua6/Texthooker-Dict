@@ -7,7 +7,10 @@ var scroll_button = false;
 
 function scrollContentup(){
 	if (scrolling == true && scroll_button == true){
-		window.scrollBy(0,-scroll_step);
+		window.scrollBy({
+			left:0,
+			top:-scroll_step,
+			behavior: 'smooth'});
 		scrolldelay = setTimeout('scrollContentup()',50); // scrolls every 100 milliseconds
 		}
 	else {
@@ -17,7 +20,10 @@ function scrollContentup(){
 
 function scrollContentdown(){
 	if (scrolling == true && scroll_button == true){
-		window.scrollBy(0,scroll_step);
+		window.scrollBy({
+			left:0,
+			top:scroll_step,
+			behavior: 'smooth'});
 		scrolldelay = setTimeout('scrollContentdown()',50); // scrolls every 100 milliseconds
 		}
 	else {

@@ -5,10 +5,6 @@
 <title>Texthooker</title>
 <style type="text/css">
 
-html {
-scroll-behavior: smooth;
-}
-
 body {
 	background-color: #bababa;
 	color: #000000;
@@ -485,6 +481,7 @@ function resizeRightFunc(e){
 		posRight = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginRight = $(window).width() - e.x + "px";
+		scrollToNewestLine();
 
 		clearTimeout(timeBeforeSavePos);
 		//Wait 20s before it saves
@@ -515,6 +512,7 @@ function resizeLeftFunc(e){
 		posLeft = e.x;
 		//Set the document body margin to the width - mouse x coordinates
 		document.body.style.marginLeft = e.x + 5 + "px";
+		scrollToNewestLine();
 
 		clearTimeout(timeBeforeSavePos);
 		//Wait 20s before it saves
