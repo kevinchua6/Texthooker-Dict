@@ -30,8 +30,6 @@ body {
 	padding-bottom:5px;
 }
 
-
-
 #remove_button {
 	background-color:rgba(25,25,25,0.8);
 	color:#9d9d9d;
@@ -80,6 +78,21 @@ body {
 	position: absolute;
 	display: none;
 	white-space: pre-line;
+}
+
+#toggle-light {
+	background-color:rgba(25,25,25,0.8);
+	color:#9d9d9d;
+	font-size:.4em;
+	line-height:100%;
+	float:right;
+	margin-right:10px;
+	padding-left:8px;
+	padding-right:8px;
+	padding-top:5px;
+	padding-bottom:5px;
+	cursor:pointer;
+	cursor:hand;
 }
 
 .toggle_scrolling_button {
@@ -163,11 +176,12 @@ For more font attribute information visit http://www.w3schools.com/css/css_font.
 <body style="background-color: rgb(32, 32, 32); color: rgb(188, 188, 188);">
 <!-- <div>何気無く死んでいた。俺はそういう人間なんだぜ。</div> -->
 <div class="container">
-<button id="toggle-light" class="toggle_scrolling_button" title="Toggle dark/light mode (L)">L</button>
+
 <button id="toggle-scrolling" class="toggle_scrolling_button" title="Toggle scrolling (O)">O</button>
 <!-- This is the div used for the "remove last line" button. -->
 <button id="remove_button" title="Remove last line (X)" >x</button>
 <!-- End button div. -->
+<button id="toggle-light" title="Toggle dark/light mode (L)">L</button>
 
 <!-- This is the div used for the counter. -->
 <div id="counter" title="No. of characters / No. of lines">No. of characters / No. of lines</div>
@@ -477,7 +491,6 @@ observer.observe(targetNode, config);
 var marginsBool = true;
 document.addEventListener("keydown", function(e){
 	//Handles all the keypresses for all the hotkeys
-	e.preventDefault();
 	const key = e.key;
 	switch (key){
 		case "m":
